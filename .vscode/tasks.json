@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "run gradle",
+            "type": "shell",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "gradlew.bat installDebug && adb shell am start -n fr.isep.mediascanner/.MainActivity -a android.intent.action.MAIN"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
