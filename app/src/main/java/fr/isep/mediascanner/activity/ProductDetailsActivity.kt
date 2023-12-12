@@ -1,7 +1,10 @@
 package fr.isep.mediascanner.activity
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
@@ -15,6 +18,7 @@ import fr.isep.mediascanner.R
 import fr.isep.mediascanner.database.AppDatabase
 import fr.isep.mediascanner.database.AppDatabaseSingleton
 import fr.isep.mediascanner.model.api.ProductItem
+import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.model.local.Room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,7 +46,7 @@ class ProductDetailsActivity : AppCompatActivity() {
 
             // If no rooms exist, create a default one
             if (rooms.isEmpty()) {
-                var defaultRoom = Room(id = 0, name = "Default Room")
+                var defaultRoom = Room(id = 0, name = "Default")
                 withContext(Dispatchers.IO) {
                     val roomIdLong = db.roomDao().insert(defaultRoom)
                     val roomId = roomIdLong.toInt()
@@ -58,65 +62,11 @@ class ProductDetailsActivity : AppCompatActivity() {
             spinnerRooms.adapter = adapter
         }
 
-        // Handle the button click
-        buttonAddToRoom.setOnClickListener {
-            val productItem: fr.isep.mediascanner.model.api.ProductItem? = intent.getParcelableExtra("ITEM")
-            if (productItem?.title != null) {
-                val selectedRoom = rooms[spinnerRooms.selectedItemPosition]
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        val product = fr.isep.mediascanner.model.local.Product(
-                            id = 0,
-                            title = productItem.title,
-                            roomId = selectedRoom.id,
-                            ean = productItem.ean,
-                            upc = productItem.upc,
-                            gtin = productItem.gtin,
-                            asin = productItem.asin,
-                            description = productItem.description,
-                            isbn = productItem.isbn,
-                            publisher = productItem.publisher,
-                            brand = productItem.brand,
-                            model = productItem.model,
-                            dimension = productItem.dimension,
-                            weight = productItem.weight,
-                            category = productItem.category,
-                            currency = productItem.currency,
-                            lowest_recorded_price = productItem.lowest_recorded_price,
-                            highest_recorded_price = productItem.highest_recorded_price,
-                            images = imageURL
-                        )
-                        val productIdLong = db.productDao().insert(product)
-                        val productId = productIdLong.toInt()
-                        Log.println(Log.INFO, "RoomMediaScanner", String.format("new Product #%d %s place on room %d", productId, productItem.title, selectedRoom.id))
-
-                        // Insert offers
-                        productItem.offers?.forEach { productOffer ->
-                            val offer = fr.isep.mediascanner.model.local.Offer(
-                                id = 0,
-                                productId = productId,
-                                merchant = productOffer.merchant,
-                                domain = productOffer.domain,
-                                title = productOffer.title,
-                                currency = productOffer.currency,
-                                list_price = productOffer.list_price,
-                                price = productOffer.price,
-                                shipping = productOffer.shipping,
-                                condition = productOffer.condition,
-                                availability = productOffer.availability,
-                                link = productOffer.link,
-                                updated_t = productOffer.updated_t
-                            )
-                            db.offerDao().insert(offer)
-                        }
-                    }
-                }
-            }
-        }
-
-
         // Récupération des données du produit depuis l'intent
-        val productItem: ProductItem? = intent.getParcelableExtra("ITEM")
+        val productItem: ProductItem? = intent.getParcelableExtra("PRODUCT_ITEM")
+        val product: Product? = intent.getParcelableExtra("PRODUCT")
+
+        Log.println(Log.INFO, "RoomMediaDebug", String.format("productItem %s%nProduct %s", productItem.toString(), product.toString()))
 
         if (productItem != null) {
             // Assignation des vues du layout
@@ -148,6 +98,145 @@ class ProductDetailsActivity : AppCompatActivity() {
                             // Do nothing
                         }
                     })
+                }
+            }
+            
+
+            // Handle the button click if productItem is not null
+            buttonAddToRoom.setOnClickListener {
+                if (productItem.title != null) {
+                    val selectedRoom = rooms[spinnerRooms.selectedItemPosition]
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            val productDB = fr.isep.mediascanner.model.local.Product(
+                                id = 0,
+                                title = productItem.title,
+                                roomId = selectedRoom.id,
+                                ean = productItem.ean,
+                                upc = productItem.upc,
+                                gtin = productItem.gtin,
+                                asin = productItem.asin,
+                                description = productItem.description,
+                                isbn = productItem.isbn,
+                                publisher = productItem.publisher,
+                                brand = productItem.brand,
+                                model = productItem.model,
+                                dimension = productItem.dimension,
+                                weight = productItem.weight,
+                                category = productItem.category,
+                                currency = productItem.currency,
+                                lowest_recorded_price = productItem.lowest_recorded_price,
+                                highest_recorded_price = productItem.highest_recorded_price,
+                                images = imageURL
+                            )
+                            val productIdLong = db.productDao().insert(productDB)
+                            val productId = productIdLong.toInt()
+                            Log.println(Log.INFO, "RoomMediaScanner", String.format("new Product #%d %s place on room %d", productId, productItem.title, selectedRoom.id))
+
+                            // Insert offers
+                            productItem.offers?.forEach { productOffer ->
+                                val offer = fr.isep.mediascanner.model.local.Offer(
+                                    id = 0,
+                                    productId = productId,
+                                    merchant = productOffer.merchant,
+                                    domain = productOffer.domain,
+                                    title = productOffer.title,
+                                    currency = productOffer.currency,
+                                    list_price = productOffer.list_price,
+                                    price = productOffer.price,
+                                    shipping = productOffer.shipping,
+                                    condition = productOffer.condition,
+                                    availability = productOffer.availability,
+                                    link = productOffer.link,
+                                    updated_t = productOffer.updated_t
+                                )
+                                db.offerDao().insert(offer)
+                            }
+                        }
+                        withContext(Dispatchers.Main) {
+                            finish()
+                        }
+                    }
+                }
+            }
+            buttonAddToRoom.text = "Add to Room"
+
+            spinnerRooms.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
+        } else if(product != null) {
+
+            // Assignation des vues du layout
+            val titleTextView = findViewById<TextView>(R.id.textViewTitle)
+            val descriptionTextView = findViewById<TextView>(R.id.textViewDescription)
+            val brandTextView = findViewById<TextView>(R.id.textViewBrand)
+            val isbnTextView = findViewById<TextView>(R.id.textViewISBN)
+            val publisherTextView = findViewById<TextView>(R.id.textViewPublisher)
+            val categoryTextView = findViewById<TextView>(R.id.textViewCategory)
+
+            // Affichage des détails du produit dans les vues
+            titleTextView.text = product.title  ?: "Unknown"
+            descriptionTextView.text = product.description  ?: "Unknown"
+            brandTextView.text = String.format("Marque: %s", (product.brand ?: "Unknown"))
+            isbnTextView.text = String.format("ISBN: %s", (product.isbn ?: "Unknown"))
+            publisherTextView.text = String.format("Éditeur: %s", (product.publisher ?: "Unknown"))
+            categoryTextView.text = String.format("Catégorie: %s", (product.category ?: "Unknown"))
+
+            if (!product.images.isNullOrEmpty()) {
+                val imageView = findViewById<ImageView>(R.id.imageViewProduct)
+                Picasso.get().load(product.images).fetch(object : Callback {
+                    override fun onSuccess() {
+                        Picasso.get().load(product.images).into(imageView)
+                    }
+
+                    override fun onError(e: java.lang.Exception?) {
+                        // Do nothing
+                    }
+                })
+            }
+
+            // Handle the button click if productItem is not null
+            buttonAddToRoom.setOnClickListener {
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+
+                        db.productDao().delete(product)
+                        Log.println(Log.INFO, "RoomMediaScanner", String.format("Product deleted #%d %s from room %d", product.id, product.title, product.roomId))
+
+                    }
+                    withContext(Dispatchers.Main) {
+                        setResult(Activity.RESULT_OK)
+                        finish()
+                    }
+                }
+            }
+            buttonAddToRoom.text = "Delete from Room"
+
+            spinnerRooms.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+
+                            val selectedRoom = rooms[spinnerRooms.selectedItemPosition]
+                            product.roomId = selectedRoom.id
+                            db.productDao().update(product)
+                            Log.println(Log.INFO, "RoomMediaScanner", String.format("Product updated #%d %s from room %d to room %d", product.id, product.title, product.roomId, selectedRoom.id))
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Another interface callback
                 }
             }
         }

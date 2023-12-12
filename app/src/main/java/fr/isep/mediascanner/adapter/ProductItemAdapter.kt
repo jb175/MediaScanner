@@ -1,5 +1,6 @@
 package fr.isep.mediascanner.adapter
 
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,8 @@ class ProductItemAdapter(
         private val db: AppDatabase,
         private val scope: LifecycleCoroutineScope
 ) : RecyclerView.Adapter<ProductItemAdapter.ProductViewHolder>() {
+    
+    private val PRODUCT_DETAILS_REQUEST_CODE = 201
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val productNameTextView: TextView = itemView.findViewById(R.id.productNameTextView)
@@ -39,12 +42,13 @@ class ProductItemAdapter(
         holder.itemView.setOnClickListener {
             val context = it.context
             scope.launch {
-                val apiProduct = convertLocalProductToApiProduct(product, db)
                 val intent =
-                        Intent(context, ProductDetailsActivity::class.java).apply {
-                            putExtra("ITEM", apiProduct)
-                        }
-                context.startActivity(intent)
+                    Intent(context, ProductDetailsActivity::class.java).apply {
+                        putExtra("PRODUCT", product)
+                    }
+                    if (context is Activity) {
+                        context.startActivityForResult(intent, PRODUCT_DETAILS_REQUEST_CODE)
+                    }
             }
         }
     }

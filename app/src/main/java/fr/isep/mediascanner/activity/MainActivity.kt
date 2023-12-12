@@ -1,10 +1,12 @@
 package fr.isep.mediascanner.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.zxing.integration.android.IntentIntegrator
 import fr.isep.mediascanner.R
@@ -15,6 +17,7 @@ import fr.isep.mediascanner.fragment.ScanFragment
 class MainActivity : AppCompatActivity() {
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 200
+    private val PRODUCT_DETAILS_REQUEST_CODE = 201
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +76,10 @@ class MainActivity : AppCompatActivity() {
                     fragment.requestProductDetails(scannedData)
                 }
             }
+        } else if (requestCode == PRODUCT_DETAILS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, SavedMediaFragment())
+            transaction.commit()
         }
     }
 

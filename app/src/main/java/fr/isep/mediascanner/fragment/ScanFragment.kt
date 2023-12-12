@@ -71,6 +71,7 @@ class ScanFragment : Fragment() {
         val button: Button = view.findViewById(R.id.submit_button)
         button.setOnClickListener(View.OnClickListener {
             requestProductDetails(upc.text.toString())
+            upc.text.clear()
         })
     }
 
@@ -141,7 +142,7 @@ class ScanFragment : Fragment() {
                         if (productItem != null) {
                             //start new activity
                             val intent = Intent(activity, ProductDetailsActivity::class.java)
-                            intent.putExtra("ITEM", productItem)
+                            intent.putExtra("PRODUCT_ITEM", productItem)
                             startActivity(intent)
                         } else {
                             Log.println(Log.WARN, "ScanResult", "No product item found (2)")
