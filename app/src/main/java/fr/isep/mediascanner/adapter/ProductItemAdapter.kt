@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,7 @@ class ProductItemAdapter(
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val productNameTextView: TextView = itemView.findViewById(R.id.productNameTextView)
+        val productIconImageView: ImageView = itemView.findViewById(R.id.productIconImageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -37,6 +39,15 @@ class ProductItemAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = products[position]
         holder.productNameTextView.text = product.title
+
+        if (product.category != null) {
+            when {
+                product.category.contains("Books") -> holder.productIconImageView.setImageResource(R.drawable.baseline_menu_book_24)
+                product.category.contains("Music & Sound") -> holder.productIconImageView.setImageResource(R.drawable.baseline_music_note_24)
+            }
+        } else {
+            holder.productIconImageView.setImageResource(R.drawable.baseline_error_24)
+        }
 
         // Set the click listener
         holder.itemView.setOnClickListener {

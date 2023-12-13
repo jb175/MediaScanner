@@ -227,7 +227,7 @@ class ProductDetailsActivity : AppCompatActivity() {
             buttonAddToRoom.setOnClickListener {
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
-
+                        db.offerDao().deleteOffersForProduct(product.id)
                         db.productDao().delete(product)
                         Log.println(Log.INFO, "RoomMediaScanner", String.format("Product deleted #%d %s from room %d", product.id, product.title, product.roomId))
 
