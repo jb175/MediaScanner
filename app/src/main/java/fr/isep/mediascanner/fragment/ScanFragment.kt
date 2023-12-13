@@ -69,10 +69,10 @@ class ScanFragment : Fragment() {
 
         val upc: EditText = view.findViewById(R.id.upc)
         val button: Button = view.findViewById(R.id.submit_button)
-        button.setOnClickListener(View.OnClickListener {
+        button.setOnClickListener {
             requestProductDetails(upc.text.toString())
             upc.text.clear()
-        })
+        }
     }
 
     fun startBarcodeScanner() {

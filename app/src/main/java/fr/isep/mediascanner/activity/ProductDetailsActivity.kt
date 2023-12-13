@@ -30,7 +30,7 @@ class ProductDetailsActivity : AppCompatActivity() {
 
     private lateinit var rooms: List<Room>
     private lateinit var db: AppDatabase
-    private var imageURL = "";
+    private var imageURL = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +111,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                         val selectedRoom = rooms[spinnerRooms.selectedItemPosition]
                         lifecycleScope.launch {
                             withContext(Dispatchers.IO) {
-                                val productDB = fr.isep.mediascanner.model.local.Product(
+                                val productDB = Product(
                                     id = 0,
                                     title = productItem.title,
                                     roomId = selectedRoom.id,
