@@ -3,6 +3,7 @@ package fr.isep.mediascanner.activity
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -10,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Callback
@@ -104,58 +106,75 @@ class ProductDetailsActivity : AppCompatActivity() {
 
             // Handle the button click if productItem is not null
             buttonAddToRoom.setOnClickListener {
-                if (productItem.title != null) {
-                    val selectedRoom = rooms[spinnerRooms.selectedItemPosition]
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.IO) {
-                            val productDB = fr.isep.mediascanner.model.local.Product(
-                                id = 0,
-                                title = productItem.title,
-                                roomId = selectedRoom.id,
-                                ean = productItem.ean,
-                                upc = productItem.upc,
-                                gtin = productItem.gtin,
-                                asin = productItem.asin,
-                                description = productItem.description,
-                                isbn = productItem.isbn,
-                                publisher = productItem.publisher,
-                                brand = productItem.brand,
-                                model = productItem.model,
-                                dimension = productItem.dimension,
-                                weight = productItem.weight,
-                                category = productItem.category,
-                                currency = productItem.currency,
-                                lowest_recorded_price = productItem.lowest_recorded_price,
-                                highest_recorded_price = productItem.highest_recorded_price,
-                                images = imageURL
-                            )
-                            val productIdLong = db.productDao().insert(productDB)
-                            val productId = productIdLong.toInt()
-                            Log.println(Log.INFO, "RoomMediaScanner", String.format("new Product #%d %s place on room %d", productId, productItem.title, selectedRoom.id))
-
-                            // Insert offers
-                            productItem.offers?.forEach { productOffer ->
-                                val offer = fr.isep.mediascanner.model.local.Offer(
+                if (productItem.title != null && productItem.category != null) {
+                    if (productItem.category.contains("Media")) {
+                        val selectedRoom = rooms[spinnerRooms.selectedItemPosition]
+                        lifecycleScope.launch {
+                            withContext(Dispatchers.IO) {
+                                val productDB = fr.isep.mediascanner.model.local.Product(
                                     id = 0,
-                                    productId = productId,
-                                    merchant = productOffer.merchant,
-                                    domain = productOffer.domain,
-                                    title = productOffer.title,
-                                    currency = productOffer.currency,
-                                    list_price = productOffer.list_price,
-                                    price = productOffer.price,
-                                    shipping = productOffer.shipping,
-                                    condition = productOffer.condition,
-                                    availability = productOffer.availability,
-                                    link = productOffer.link,
-                                    updated_t = productOffer.updated_t
+                                    title = productItem.title,
+                                    roomId = selectedRoom.id,
+                                    ean = productItem.ean,
+                                    upc = productItem.upc,
+                                    gtin = productItem.gtin,
+                                    asin = productItem.asin,
+                                    description = productItem.description,
+                                    isbn = productItem.isbn,
+                                    publisher = productItem.publisher,
+                                    brand = productItem.brand,
+                                    model = productItem.model,
+                                    dimension = productItem.dimension,
+                                    weight = productItem.weight,
+                                    category = productItem.category,
+                                    currency = productItem.currency,
+                                    lowest_recorded_price = productItem.lowest_recorded_price,
+                                    highest_recorded_price = productItem.highest_recorded_price,
+                                    images = imageURL
                                 )
-                                db.offerDao().insert(offer)
+                                val productIdLong = db.productDao().insert(productDB)
+                                val productId = productIdLong.toInt()
+                                Log.println(
+                                    Log.INFO,
+                                    "RoomMediaScanner",
+                                    String.format(
+                                        "new Product #%d %s place on room %d",
+                                        productId,
+                                        productItem.title,
+                                        selectedRoom.id
+                                    )
+                                )
+
+                                // Insert offers
+                                productItem.offers?.forEach { productOffer ->
+                                    val offer = fr.isep.mediascanner.model.local.Offer(
+                                        id = 0,
+                                        productId = productId,
+                                        merchant = productOffer.merchant,
+                                        domain = productOffer.domain,
+                                        title = productOffer.title,
+                                        currency = productOffer.currency,
+                                        list_price = productOffer.list_price,
+                                        price = productOffer.price,
+                                        shipping = productOffer.shipping,
+                                        condition = productOffer.condition,
+                                        availability = productOffer.availability,
+                                        link = productOffer.link,
+                                        updated_t = productOffer.updated_t
+                                    )
+                                    db.offerDao().insert(offer)
+                                }
+                            }
+                            withContext(Dispatchers.Main) {
+                                finish()
                             }
                         }
-                        withContext(Dispatchers.Main) {
-                            finish()
-                        }
+                    } else {
+                        Log.println(Log.WARN, "ScanResult", "Not a media")
+
+                        val toast = Toast.makeText(this.applicationContext, "Not a media", Toast.LENGTH_SHORT)
+                        toast.setGravity(Gravity.TOP or Gravity.END, 0, 0)
+                        toast.show()
                     }
                 }
             }
