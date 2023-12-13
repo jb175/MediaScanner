@@ -12,17 +12,19 @@ import fr.isep.mediascanner.R
 import fr.isep.mediascanner.fragment.AccountFragment
 import fr.isep.mediascanner.fragment.SavedMediaFragment
 import fr.isep.mediascanner.fragment.ScanFragment
+import fr.isep.mediascanner.RequestCodes
+import fr.isep.mediascanner.database.AppDatabase
+import fr.isep.mediascanner.database.AppDatabaseSingleton
 
 class MainActivity : AppCompatActivity() {
 
-    private val CAMERA_PERMISSION_REQUEST_CODE = 200
-    private val PRODUCT_DETAILS_REQUEST_CODE = 201
-    private val SETUP_ROOM_REQUEST_CODE = 202
-    private val SCAN_REQUEST_CODE = 203
+    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        db = AppDatabaseSingleton.getDatabase(applicationContext)
 
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
@@ -54,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+        if (requestCode == RequestCodes.CAMERA_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
                 if (fragment is ScanFragment) {
@@ -69,7 +71,15 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         Log.println(Log.INFO, "DebugMediaScanner", "$requestCode $resultCode $result")
-        if (requestCode == SCAN_REQUEST_CODE && result != null) {
+        if (requestCode == RequestCodes.PRODUCT_DETAILS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, SavedMediaFragment())
+            transaction.commit()
+        } else if (requestCode == RequestCodes.SETUP_ROOM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, SavedMediaFragment())
+            transaction.commit()
+        } else if (result != null) {
             if (result.contents != null) {
                 val scannedData = result.contents
                 Log.println(Log.INFO, "ScanResult", scannedData)
@@ -78,14 +88,6 @@ class MainActivity : AppCompatActivity() {
                     fragment.requestProductDetails(scannedData)
                 }
             }
-        } else if (requestCode == PRODUCT_DETAILS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, SavedMediaFragment())
-            transaction.commit()
-        } else if (requestCode == SETUP_ROOM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, SavedMediaFragment())
-            transaction.commit()
         }
     }
 

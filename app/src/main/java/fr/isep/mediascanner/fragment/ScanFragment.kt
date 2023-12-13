@@ -23,6 +23,7 @@ import fr.isep.mediascanner.model.api.ProductItem
 import fr.isep.mediascanner.model.api.ProductResponse
 import fr.isep.mediascanner.service.ProductService
 import fr.isep.mediascanner.R
+import fr.isep.mediascanner.RequestCodes
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -33,9 +34,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.ref.WeakReference
 
 class ScanFragment : Fragment() {
-
-    private val CAMERA_PERMISSION_REQUEST_CODE = 200
-    private val SCAN_REQUEST_CODE = 203
 
     private var activityRef: WeakReference<Activity>? = null
 
@@ -86,8 +84,7 @@ class ScanFragment : Fragment() {
             integrator.setCameraId(0)
             integrator.setBeepEnabled(false)
             integrator.setBarcodeImageEnabled(false)
-            val intent = integrator.createScanIntent()
-            activity.startActivityForResult(intent, SCAN_REQUEST_CODE)
+            integrator.initiateScan()
         }
     }
 
@@ -108,7 +105,7 @@ class ScanFragment : Fragment() {
             ActivityCompat.requestPermissions(
                 activity,
                 arrayOf(Manifest.permission.CAMERA),
-                CAMERA_PERMISSION_REQUEST_CODE
+                RequestCodes.CAMERA_PERMISSION_REQUEST_CODE
             )
         }
     }
@@ -131,37 +128,60 @@ class ScanFragment : Fragment() {
 
         val productService = retrofit.create(ProductService::class.java)
 
+        Log.println(Log.INFO, "ScanResult", "&scannedData")
         val call = productService.getProductInfo(scannedData)
 
         call.enqueue(object : Callback<ProductResponse> {
             override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
                 val activity = activityRef?.get()
-                if (response.isSuccessful && activity != null) {
-                    Log.println(Log.INFO, "ScanResult", response.body().toString())
-                    val productResponse: ProductResponse? = response.body()
-                    if ((productResponse?.total != null) && (productResponse.total > 0)) {
-                        val productItem: ProductItem? = productResponse.items?.get(0)
-                        if (productItem != null) {
-                            //start new activity
-                            val intent = Intent(activity, ProductDetailsActivity::class.java)
-                            intent.putExtra("PRODUCT_ITEM", productItem)
-                            startActivity(intent)
-                        } else {
-                            Log.println(Log.WARN, "ScanResult", "No product item found (2)")
+                if (activity != null) {
+                    if (response.isSuccessful) {
+                        Log.println(Log.INFO, "ScanResult", response.body().toString())
+                        val productResponse: ProductResponse? = response.body()
+                        if ((productResponse?.total != null) && (productResponse.total > 0)) {
+                            val productItem: ProductItem? = productResponse.items?.get(0)
+                            if (productItem != null) {
+                                //start new activity
+                                val intent = Intent(activity, ProductDetailsActivity::class.java)
+                                intent.putExtra("PRODUCT_ITEM", productItem)
+                                startActivity(intent)
+                            } else {
+                                Log.println(Log.WARN, "ScanResult", "No product item found (2)")
 
-                            val toast = Toast.makeText(activity.applicationContext, "No product item found (2)", Toast.LENGTH_SHORT)
+                                val toast = Toast.makeText(
+                                    activity.applicationContext,
+                                    R.string.scan_toast_noProductFound,
+                                    Toast.LENGTH_SHORT
+                                )
+                                toast.setGravity(Gravity.TOP or Gravity.END, 0, 0)
+                                toast.show()
+                            }
+                        } else {
+                            Log.println(Log.WARN, "ScanResult", "No product item found")
+
+                            val toast = Toast.makeText(
+                                activity.applicationContext,
+                                R.string.scan_toast_noProductFound,
+                                Toast.LENGTH_SHORT
+                            )
                             toast.setGravity(Gravity.TOP or Gravity.END, 0, 0)
                             toast.show()
                         }
                     } else {
-                        Log.println(Log.WARN, "ScanResult", "No product item found")
+                        Log.println(
+                            Log.WARN,
+                            "ScanResult",
+                            String.format("Request has failed, error code", response.code())
+                        )
 
-                        val toast = Toast.makeText(activity.applicationContext, "No product item found", Toast.LENGTH_SHORT)
+                        val toast = Toast.makeText(
+                            activity.applicationContext,
+                            R.string.scan_toast_notAValidBarcode,
+                            Toast.LENGTH_SHORT
+                        )
                         toast.setGravity(Gravity.TOP or Gravity.END, 0, 0)
                         toast.show()
                     }
-                } else {
-                    Log.println(Log.WARN, "ScanResult", String.format("Request has failed, error code", response.code()))
                 }
             }
 

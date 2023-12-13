@@ -24,4 +24,7 @@ interface ProductDao {
 
     @Delete
     suspend fun delete(productItem: Product)
+
+    @Query("DELETE FROM Product WHERE roomId = :roomId")
+    suspend fun deleteProductsInRoom(roomId: Int)
 }

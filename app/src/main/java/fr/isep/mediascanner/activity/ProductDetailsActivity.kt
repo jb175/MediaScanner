@@ -225,13 +225,13 @@ class ProductDetailsActivity : AppCompatActivity() {
                     } else {
                         Log.println(Log.WARN, "ScanResult", "Not a media")
 
-                        val toast = Toast.makeText(this.applicationContext, "Not a media", Toast.LENGTH_SHORT)
+                        val toast = Toast.makeText(this.applicationContext, R.string.productDetails_toast_notAMedia, Toast.LENGTH_SHORT)
                         toast.setGravity(Gravity.TOP or Gravity.END, 0, 0)
                         toast.show()
                     }
                 }
             }
-            buttonAddToRoom.text = "Add to Room"
+            buttonAddToRoom.setText(R.string.productDetails_addToRoom)
 
         } else if(product != null) {
 
@@ -279,7 +279,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                     }
                 }
             }
-            buttonAddToRoom.text = "Delete from Room"
+            buttonAddToRoom.setText(R.string.productDetails_delete)
 
         }
     }

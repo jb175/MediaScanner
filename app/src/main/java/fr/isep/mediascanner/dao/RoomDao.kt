@@ -19,6 +19,9 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(room: Room): Long
 
+    @Update
+    suspend fun update(room: Room)
+
     @Delete
     suspend fun delete(room: Room)
 }

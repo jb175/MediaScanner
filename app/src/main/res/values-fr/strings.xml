@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MediaScanner</string>
+    <string name="mainMenu_scan">Scan</string>
+    <string name="mainMenu_account">Compte</string>
+    <string name="mainMenu_savedMedia">Media Sauvegardés</string>
+    <string name="mainMenu_scan_buttonScan">Scanner</string>
+    <string name="mainMenu_scan_ISBNInput">ISBN</string>
+    <string name="mainMenu_scan_search">Rechercher</string>
+    <string name="mainMenu_savedMedia_setupRoom">Créer une pièce</string>
+    <string name="setupRoom_createButton">Créer</string>
+    <string name="setupRoom_modifyButton">Modifier</string>
+    <string name="setupRoom_cancelButton">Annuler</string>
+    <string name="setupRoom_deleteButton">Supprimer</string>
+    <string name="setupRoom_roomNameEditText">Nom de la pièce</string>
+    <string name="productDetails_delete">Supprimer</string>
+    <string name="productDetails_addToRoom">Ajouter à la pièce</string>
+    <string name="scan_toast_noProductFound">Pas de produit trouvé pour ce code barre</string>
+    <string name="productDetails_toast_notAMedia">Ce n\'est pas un média</string>
+    <string name="scan_toast_notAValidBarcode">Ce n\'est pas un code barre valide</string>
+</resources>

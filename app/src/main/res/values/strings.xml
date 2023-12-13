@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">MediaScanner</string>
+    <string name="mainMenu_scan">Scan</string>
+    <string name="mainMenu_savedMedia">Saved Media</string>
+    <string name="mainMenu_account">Account</string>
+    <string name="mainMenu_scan_buttonScan">Scan</string>
+    <string name="mainMenu_scan_ISBNInput">ISBN</string>
+    <string name="mainMenu_scan_search">Search</string>
+    <string name="mainMenu_savedMedia_setupRoom">Create Room</string>
+    <string name="setupRoom_createButton">Create</string>
+    <string name="setupRoom_modifyButton">Modify</string>
+    <string name="setupRoom_cancelButton">Cancel</string>
+    <string name="setupRoom_deleteButton">Delete</string>
+    <string name="setupRoom_roomNameEditText">Room Name</string>
+    <string name="productDetails_delete">Delete</string>
+    <string name="productDetails_addToRoom">Add to room</string>
+    <string name="scan_toast_noProductFound">No product found for this barcode</string>
+    <string name="productDetails_toast_notAMedia">Not a media</string>
+    <string name="scan_toast_notAValidBarcode">Not a valid barcode</string>
 </resources>

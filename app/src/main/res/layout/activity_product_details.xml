@@ -37,7 +37,7 @@
                 android:id="@+id/buttonAddToRoom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add to Room" />
+                android:text="@string/productDetails_delete" />
 
             <!-- Image -->
             <ImageView

@@ -18,7 +18,8 @@ class AppDatabaseSingleton {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "room-media-scanner"
-                ).build()
+                ).fallbackToDestructiveMigration()
+                .build()
                 INSTANCE = instance
                 return instance
             }

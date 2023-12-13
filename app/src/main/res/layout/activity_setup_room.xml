@@ -9,14 +9,21 @@
         android:id="@+id/roomNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Room Name"
+        android:hint="@string/setupRoom_roomNameEditText"
         android:inputType="text" />
 
     <Button
-        android:id="@+id/submitRoomButton"
+        android:id="@+id/confirmRoomButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Submit" />
+        android:text="@string/setupRoom_createButton" />
+
+    <Button
+        android:id="@+id/deleteRoomButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/setupRoom_cancelButton" />
 
 </LinearLayout>

@@ -11,19 +11,15 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.activity.ProductDetailsActivity
-import fr.isep.mediascanner.database.AppDatabase
-import fr.isep.mediascanner.model.convertion.convertLocalProductToApiProduct
 import fr.isep.mediascanner.model.local.Product
+import fr.isep.mediascanner.RequestCodes
 import kotlinx.coroutines.launch
 
 class ProductItemAdapter(
         private val products: List<Product>,
-        private val db: AppDatabase,
         private val scope: LifecycleCoroutineScope
 ) : RecyclerView.Adapter<ProductItemAdapter.ProductViewHolder>() {
     
-    private val PRODUCT_DETAILS_REQUEST_CODE = 201
-
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val productNameTextView: TextView = itemView.findViewById(R.id.productNameTextView)
         val productIconImageView: ImageView = itemView.findViewById(R.id.productIconImageView)
@@ -53,13 +49,12 @@ class ProductItemAdapter(
         holder.itemView.setOnClickListener {
             val context = it.context
             scope.launch {
-                val intent =
-                    Intent(context, ProductDetailsActivity::class.java).apply {
-                        putExtra("PRODUCT", product)
-                    }
-                    if (context is Activity) {
-                        context.startActivityForResult(intent, PRODUCT_DETAILS_REQUEST_CODE)
-                    }
+                val intent = Intent(context, ProductDetailsActivity::class.java).apply {
+                    putExtra("PRODUCT", product)
+                }
+                if (context is Activity) {
+                    context.startActivityForResult(intent, RequestCodes.PRODUCT_DETAILS_REQUEST_CODE)
+                }
             }
         }
     }
