@@ -2,16 +2,20 @@ package fr.isep.mediascanner.fragment
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import fr.isep.mediascanner.R
+import fr.isep.mediascanner.activity.ProductDetailsActivity
+import fr.isep.mediascanner.activity.SetupRoomActivity
 import fr.isep.mediascanner.adapter.ProductItemAdapter
 import fr.isep.mediascanner.adapter.RoomHeaderAdapter
 import fr.isep.mediascanner.database.AppDatabaseSingleton
@@ -25,6 +29,7 @@ import java.lang.ref.WeakReference
 class SavedMediaFragment : Fragment() {
 
     private var activityRef: WeakReference<Activity>? = null
+    private val SETUP_ROOM_REQUEST_CODE = 202
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -66,6 +71,12 @@ class SavedMediaFragment : Fragment() {
                 withContext(Dispatchers.Main) {
                     recyclerView.adapter = ConcatAdapter(*adapters.toTypedArray())
                 }
+            }
+
+            val createRoomButton: Button = view.findViewById(R.id.createRoomButton)
+            createRoomButton.setOnClickListener {
+                val intent = Intent(activity.applicationContext, SetupRoomActivity::class.java)
+                startActivityForResult(intent, SETUP_ROOM_REQUEST_CODE)
             }
         }
     }

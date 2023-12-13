@@ -35,6 +35,7 @@ import java.lang.ref.WeakReference
 class ScanFragment : Fragment() {
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 200
+    private val SCAN_REQUEST_CODE = 203
 
     private var activityRef: WeakReference<Activity>? = null
 
@@ -85,7 +86,8 @@ class ScanFragment : Fragment() {
             integrator.setCameraId(0)
             integrator.setBeepEnabled(false)
             integrator.setBarcodeImageEnabled(false)
-            integrator.initiateScan()
+            val intent = integrator.createScanIntent()
+            activity.startActivityForResult(intent, SCAN_REQUEST_CODE)
         }
     }
 

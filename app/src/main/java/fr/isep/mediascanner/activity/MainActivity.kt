@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 200
     private val PRODUCT_DETAILS_REQUEST_CODE = 201
+    private val SETUP_ROOM_REQUEST_CODE = 202
+    private val SCAN_REQUEST_CODE = 203
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +68,8 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null) {
+        Log.println(Log.INFO, "DebugMediaScanner", "$requestCode $resultCode $result")
+        if (requestCode == SCAN_REQUEST_CODE && result != null) {
             if (result.contents != null) {
                 val scannedData = result.contents
                 Log.println(Log.INFO, "ScanResult", scannedData)
@@ -76,6 +79,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } else if (requestCode == PRODUCT_DETAILS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, SavedMediaFragment())
+            transaction.commit()
+        } else if (requestCode == SETUP_ROOM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(R.id.fragment_container, SavedMediaFragment())
             transaction.commit()

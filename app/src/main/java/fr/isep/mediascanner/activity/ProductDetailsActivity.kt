@@ -42,6 +42,11 @@ class ProductDetailsActivity : AppCompatActivity() {
         val spinnerRooms = findViewById<Spinner>(R.id.spinnerRooms)
         val buttonAddToRoom = findViewById<Button>(R.id.buttonAddToRoom)
 
+
+        // Récupération des données du produit depuis l'intent
+        val productItem: ProductItem? = intent.getParcelableExtra("PRODUCT_ITEM")
+        val product: Product? = intent.getParcelableExtra("PRODUCT")
+
         // Load the rooms from the database
         lifecycleScope.launch {
             rooms = withContext(Dispatchers.IO) { db.roomDao().getAll() }
@@ -62,13 +67,61 @@ class ProductDetailsActivity : AppCompatActivity() {
             val adapter = ArrayAdapter(this@ProductDetailsActivity, android.R.layout.simple_spinner_item, rooms.map { it.name })
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerRooms.adapter = adapter
+
+
+            if (productItem != null) {
+                spinnerRooms.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                    }
+                }
+            } else if (product != null) {
+                //set spinner to the good value
+                val specificRoomIndex = rooms.indexOfFirst { it.id == product.roomId }
+                spinnerRooms.setSelection(specificRoomIndex)
+
+                spinnerRooms.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                        val selectedRoom = rooms[spinnerRooms.selectedItemPosition]
+                        if (selectedRoom.id != product.roomId) {
+                            lifecycleScope.launch {
+                                withContext(Dispatchers.IO) {
+
+                                    product.roomId = selectedRoom.id
+                                    db.productDao().update(product)
+                                    Log.println(
+                                        Log.INFO,
+                                        "RoomMediaScanner",
+                                        String.format(
+                                            "Product updated #%d %s from room %d to room %d",
+                                            product.id,
+                                            product.title,
+                                            product.roomId,
+                                            selectedRoom.id
+                                        )
+                                    )
+                                }
+                                withContext(Dispatchers.Main) {
+                                    setResult(Activity.RESULT_OK)
+                                    finish()
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+                        // Another interface callback
+                    }
+                }
+            }
         }
-
-        // Récupération des données du produit depuis l'intent
-        val productItem: ProductItem? = intent.getParcelableExtra("PRODUCT_ITEM")
-        val product: Product? = intent.getParcelableExtra("PRODUCT")
-
-        Log.println(Log.INFO, "RoomMediaDebug", String.format("productItem %s%nProduct %s", productItem.toString(), product.toString()))
 
         if (productItem != null) {
             // Assignation des vues du layout
@@ -180,18 +233,6 @@ class ProductDetailsActivity : AppCompatActivity() {
             }
             buttonAddToRoom.text = "Add to Room"
 
-            spinnerRooms.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                }
-            }
         } else if(product != null) {
 
             // Assignation des vues du layout
@@ -240,24 +281,6 @@ class ProductDetailsActivity : AppCompatActivity() {
             }
             buttonAddToRoom.text = "Delete from Room"
 
-            spinnerRooms.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.IO) {
-
-                            val selectedRoom = rooms[spinnerRooms.selectedItemPosition]
-                            product.roomId = selectedRoom.id
-                            db.productDao().update(product)
-                            Log.println(Log.INFO, "RoomMediaScanner", String.format("Product updated #%d %s from room %d to room %d", product.id, product.title, product.roomId, selectedRoom.id))
-                        }
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Another interface callback
-                }
-            }
         }
     }
 }
