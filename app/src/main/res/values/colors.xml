@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#3D4152</color> <!-- Lighter primary color -->
+    <color name="colorPrimaryDark">#2B2E38</color> <!-- Lighter primary dark color -->
+    <color name="colorAccent">#E6C485</color> <!-- Lighter accent color -->
+    <color name="night_colorPrimary">#3D4152</color> <!-- Lighter primary color for night mode -->
+    <color name="night_colorPrimaryDark">#2B2E38</color> <!-- Lighter primary dark color for night mode -->
+    <color name="night_colorAccent">#E6C485</color> <!-- Lighter accent color for night mode -->
 </resources>

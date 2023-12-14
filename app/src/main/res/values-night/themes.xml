@@ -1,7 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme for night mode. -->
     <style name="Base.Theme.MediaScanner" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/night_colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/night_colorPrimaryDark</item>
+        <item name="colorSecondary">@color/night_colorAccent</item>
     </style>
 </resources>

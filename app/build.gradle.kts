@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "fr.isep.mediascanner"
-        minSdk = 31
+        minSdk = 29
         targetSdk = 34
         versionCode = 2
         versionName = "1.1"
