@@ -13,6 +13,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.IntentCompat.getParcelableExtra
 import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -44,8 +45,8 @@ class ProductDetailsActivity : AppCompatActivity() {
 
 
         // Récupération des données du produit depuis l'intent
-        val productItem: ProductItem? = intent.getParcelableExtra("PRODUCT_ITEM")
-        val product: Product? = intent.getParcelableExtra("PRODUCT")
+        val productItem = getParcelableExtra(intent, "PRODUCT_ITEM", ProductItem::class.java)
+        val product = getParcelableExtra(intent, "PRODUCT", Product::class.java)
 
         // Load the rooms from the database
         lifecycleScope.launch {

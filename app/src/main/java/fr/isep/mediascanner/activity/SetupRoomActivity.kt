@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.IntentCompat.getParcelableExtra
 import androidx.lifecycle.lifecycleScope
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.database.AppDatabase
@@ -28,7 +29,7 @@ class SetupRoomActivity : AppCompatActivity() {
         val submitRoomButton: Button = findViewById(R.id.confirmRoomButton)
         val deleteRoomButton: Button = findViewById(R.id.deleteRoomButton)
 
-        val room: Room? = intent.getParcelableExtra("ROOM")
+        val room: Room? = getParcelableExtra(intent, "ROOM", Room::class.java)
 
         if (room != null) {
             roomNameEditText.setText(room.name)

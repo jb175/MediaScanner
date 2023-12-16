@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "672901069659",
+    "project_id": "mediascanner-bf67e",
+    "storage_bucket": "mediascanner-bf67e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672901069659:android:81bb73bab5d4113e99b87e",
+        "android_client_info": {
+          "package_name": "fr.isep.mediascanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "672901069659-aekijv868n47dcj13ku7e7pmokl22t8p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEdz311i5V3kogDI_AUE-5PJYLzC1w-vA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "672901069659-aekijv868n47dcj13ku7e7pmokl22t8p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

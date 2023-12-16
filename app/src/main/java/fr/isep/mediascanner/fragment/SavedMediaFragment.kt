@@ -1,7 +1,6 @@
 package fr.isep.mediascanner.fragment
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,53 +8,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.activity.SetupRoomActivity
+import fr.isep.mediascanner.activity.MainActivity
 import fr.isep.mediascanner.adapter.ProductItemAdapter
 import fr.isep.mediascanner.adapter.RoomHeaderAdapter
 import fr.isep.mediascanner.database.AppDatabaseSingleton
 import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.model.local.Room
-import fr.isep.mediascanner.RequestCodes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.ref.WeakReference
 
 class SavedMediaFragment : Fragment() {
 
-    private var activityRef: WeakReference<Activity>? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is Activity) {
-            activityRef = WeakReference(context)
+    private val setupRoomResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK && context is MainActivity) {
+            (context as MainActivity).refreshSavedMediaFragment()
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_saved_media, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        if (context is MainActivity) {
 
-        val activity = activityRef?.get()
-        if (activity != null) {
+            val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
             lifecycleScope.launch {
 
-                val db = AppDatabaseSingleton.getDatabase(activity.applicationContext)
+                val db = AppDatabaseSingleton.getDatabase((context as MainActivity).applicationContext)
 
                 val rooms: List<Room> = withContext(Dispatchers.IO) { db.roomDao().getAll() }
 
@@ -76,15 +66,7 @@ class SavedMediaFragment : Fragment() {
             val createRoomButton: Button = view.findViewById(R.id.createRoomButton)
             createRoomButton.setOnClickListener {
                 val intent = Intent(activity, SetupRoomActivity::class.java)
-                startActivityForResult(intent, RequestCodes.SETUP_ROOM_REQUEST_CODE)
-
-                val newFragment = ScanFragment()
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, newFragment)
-                    .commit()
-                val bottomNavView: BottomNavigationView = activity.findViewById(R.id.bottom_navigation) ?: return@setOnClickListener
-                bottomNavView.menu.findItem(R.id.nav_scan)?.isChecked = true
-
+                setupRoomResultLauncher.launch(intent)
             }
         }
     }

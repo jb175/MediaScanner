@@ -1,6 +1,6 @@
 package fr.isep.mediascanner.adapter
 
-import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.activity.ProductDetailsActivity
 import fr.isep.mediascanner.model.local.Product
-import fr.isep.mediascanner.RequestCodes
+import fr.isep.mediascanner.activity.MainActivity
 import kotlinx.coroutines.launch
 
-class ProductItemAdapter(
-        private val products: List<Product>,
-        private val scope: LifecycleCoroutineScope
-) : RecyclerView.Adapter<ProductItemAdapter.ProductViewHolder>() {
+class ProductItemAdapter(private val products: List<Product>,  private val scope: LifecycleCoroutineScope) : RecyclerView.Adapter<ProductItemAdapter.ProductViewHolder>() {
+
+    private lateinit var context: Context
     
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val productNameTextView: TextView = itemView.findViewById(R.id.productNameTextView)
@@ -26,9 +25,8 @@ class ProductItemAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view =
-                LayoutInflater.from(parent.context)
-                        .inflate(R.layout.list_item_product, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_product, parent, false)
+        context = parent.context
         return ProductViewHolder(view)
     }
 
@@ -47,13 +45,12 @@ class ProductItemAdapter(
 
         // Set the click listener
         holder.itemView.setOnClickListener {
-            val context = it.context
             scope.launch {
                 val intent = Intent(context, ProductDetailsActivity::class.java).apply {
                     putExtra("PRODUCT", product)
                 }
-                if (context is Activity) {
-                    context.startActivityForResult(intent, RequestCodes.PRODUCT_DETAILS_REQUEST_CODE)
+                if (context is MainActivity) {
+                    (context as MainActivity).getSetupProductDetailsRefreshForActivityResult().launch(intent)
                 }
             }
         }
