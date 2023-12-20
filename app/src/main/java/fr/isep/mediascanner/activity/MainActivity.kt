@@ -18,7 +18,7 @@ import fr.isep.mediascanner.RequestCodes
 import fr.isep.mediascanner.database.AppDatabase
 import fr.isep.mediascanner.database.AppDatabaseSingleton
 import fr.isep.mediascanner.fragment.AccountFragment
-import fr.isep.mediascanner.fragment.SavedMediaFragment
+import fr.isep.mediascanner.fragment.MediaFragment
 import fr.isep.mediascanner.fragment.ScanFragment
 
 class MainActivity : AppCompatActivity() {
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             val fragment =
                     when (item.itemId) {
                         R.id.nav_scan -> ScanFragment()
-                        R.id.nav_saved_media -> SavedMediaFragment()
+                        R.id.nav_saved_media -> MediaFragment()
                         R.id.nav_account -> AccountFragment()
                         else -> null
                     }
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
     fun refreshSavedMediaFragment() {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, SavedMediaFragment())
+        transaction.replace(R.id.fragment_container, MediaFragment())
         transaction.commit()
     }
 

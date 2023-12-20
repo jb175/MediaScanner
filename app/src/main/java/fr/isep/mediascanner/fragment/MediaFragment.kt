@@ -25,7 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SavedMediaFragment : Fragment() {
+class MediaFragment : Fragment() {
 
     private val setupRoomResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK && context is MainActivity) {
@@ -34,7 +34,7 @@ class SavedMediaFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_saved_media, container, false)
+        return inflater.inflate(R.layout.fragment_media, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
