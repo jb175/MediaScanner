@@ -1,6 +1,7 @@
 package fr.isep.mediascanner.activity
 
 import android.app.Activity
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -13,6 +14,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat.getParcelableExtra
 import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Callback
@@ -233,6 +235,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                 }
             }
             buttonAddToRoom.setText(R.string.productDetails_addToRoom)
+            buttonAddToRoom.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.applicationContext, R.color.colorTrueButton))
 
         } else if(product != null) {
 
@@ -281,7 +284,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                 }
             }
             buttonAddToRoom.setText(R.string.productDetails_delete)
-
+            buttonAddToRoom.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.applicationContext, R.color.colorFalseButton))
         }
     }
 }

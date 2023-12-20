@@ -12,18 +12,28 @@
         android:hint="@string/setupRoom_roomNameEditText"
         android:inputType="text" />
 
-    <Button
-        android:id="@+id/confirmRoomButton"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/setupRoom_createButton" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/deleteRoomButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/setupRoom_cancelButton" />
+        <Button
+            android:id="@+id/confirmRoomButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorTrueButton"
+            android:text="@string/setupRoom_createButton" />
+
+        <Button
+            android:id="@+id/deleteRoomButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorFalseButton"
+            android:text="@string/setupRoom_cancelButton" />
+
+    </LinearLayout>
 
 </LinearLayout>
