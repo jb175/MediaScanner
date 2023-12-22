@@ -3,11 +3,11 @@
     <string name="app_name">MediaScanner</string>
     <string name="mainMenu_scan">Scan</string>
     <string name="mainMenu_account">Compte</string>
-    <string name="mainMenu_savedMedia">Media Sauvegardés</string>
+    <string name="mainMenu_media">Media</string>
     <string name="mainMenu_scan_buttonScan">Scanner</string>
     <string name="mainMenu_scan_ISBNInput">ISBN</string>
     <string name="mainMenu_scan_search">Rechercher</string>
-    <string name="mainMenu_savedMedia_setupRoom">Créer une pièce</string>
+    <string name="mainMenu_media_setupRoom">Créer une pièce</string>
     <string name="setupRoom_createButton">Créer</string>
     <string name="setupRoom_modifyButton">Modifier</string>
     <string name="setupRoom_cancelButton">Annuler</string>

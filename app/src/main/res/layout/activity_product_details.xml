@@ -28,16 +28,24 @@
                 android:gravity="center"
                 android:layout_marginBottom="8dp"/>
 
-            <Spinner
-                android:id="@+id/spinnerRooms"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/buttonAddToRoom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/productDetails_delete" />
+                <Spinner
+                    android:id="@+id/spinnerRooms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/buttonAddToRoom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:backgroundTint="@color/colorFalseButton"
+                    android:text="@string/productDetails_delete" />
+            </LinearLayout>
 
             <!-- Image -->
             <ImageView

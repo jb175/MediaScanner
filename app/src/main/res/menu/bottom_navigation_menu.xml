@@ -7,7 +7,7 @@
     <item
         android:id="@+id/nav_saved_media"
         android:icon="@drawable/baseline_storage_24"
-        android:title="@string/mainMenu_savedMedia"/>
+        android:title="@string/mainMenu_media"/>
     <item
         android:id="@+id/nav_account"
         android:icon="@drawable/baseline_account_circle_24"
