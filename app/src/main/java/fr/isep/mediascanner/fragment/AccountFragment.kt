@@ -3,6 +3,7 @@ package fr.isep.mediascanner.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.activity.ui.login.LoginActivity
+import kotlin.io.print
 
 class AccountFragment : Fragment() {
 
@@ -31,9 +33,12 @@ class AccountFragment : Fragment() {
 
             this.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    //TODO
+                    //currentUser = auth.currentUser
+                    Log.println(Log.INFO, "MediaScannerAccount", "User logged in ${auth.currentUser}")
                 }
             }.launch(intent)
+        } else {
+            currentUser = auth.currentUser!!
         }
     }
 }
