@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.model.local.Product
 
-abstract class ProductItemAdapter(private val products: List<Product>,  private val scope: LifecycleCoroutineScope) : RecyclerView.Adapter<ProductItemAdapter.ProductViewHolder>() {
+abstract class ProductItemAdapter(private val products: List<Product>) : RecyclerView.Adapter<ProductItemAdapter.ProductViewHolder>() {
 
     protected lateinit var context: Context
     

@@ -10,8 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.model.local.Room
 
-abstract class RoomHeaderAdapter(private val room: Room, private val scope: LifecycleCoroutineScope
-) : RecyclerView.Adapter<RoomHeaderAdapter.HeaderViewHolder>() {
+abstract class RoomHeaderAdapter(private val room: Room) : RecyclerView.Adapter<RoomHeaderAdapter.HeaderViewHolder>() {
 
     protected lateinit var context: Context
 
