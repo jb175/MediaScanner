@@ -2,7 +2,11 @@ package fr.isep.mediascanner.activity
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,10 +24,15 @@ import fr.isep.mediascanner.database.AppDatabaseSingleton
 import fr.isep.mediascanner.fragment.AccountFragment
 import fr.isep.mediascanner.fragment.MediaFragment
 import fr.isep.mediascanner.fragment.ScanFragment
+import android.net.Network
+import com.google.firebase.auth.FirebaseAuth
+import fr.isep.mediascanner.dao.remote.FirebaseDao
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var db: AppDatabase
+    private lateinit var firebaseDao: FirebaseDao
+    lateinit var auth: FirebaseAuth
 
     private val scanContract = registerForActivityResult(ScanContract()) { result: ScanIntentResult? ->
         if (result==null || result.contents == null) {
@@ -49,11 +58,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val setupProductDetailsReadOnlyRefreshForActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            //TODO
+        }
+    }
+
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            firebaseDao.uploadAllDataToFirebase()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         db = AppDatabaseSingleton.getDatabase(applicationContext)
+        firebaseDao = FirebaseDao(applicationContext)
+        auth = FirebaseAuth.getInstance()
+
+
 
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
@@ -81,6 +107,18 @@ class MainActivity : AppCompatActivity() {
 
             true
         }
+
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 
     fun refreshSavedMediaFragment() {
@@ -117,4 +155,5 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getSetupProductDetailsRefreshForActivityResult() = setupProductDetailsRefreshForActivityResult
+    fun getsetupProductDetailsReadOnlyRefreshForActivityResult() = setupProductDetailsReadOnlyRefreshForActivityResult
 }

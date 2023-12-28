@@ -1,0 +1,94 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp"
+        android:layout_margin="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Product Title -->
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:padding="8dp"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Image -->
+            <ImageView
+                android:id="@+id/imageViewProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/textViewDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Brand -->
+            <TextView
+                android:id="@+id/textViewBrand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- ISBN -->
+            <TextView
+                android:id="@+id/textViewISBN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Publisher -->
+            <TextView
+                android:id="@+id/textViewPublisher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Category -->
+            <TextView
+                android:id="@+id/textViewCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</ScrollView>

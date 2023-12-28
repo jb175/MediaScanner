@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.activity.SetupRoomActivity
 import fr.isep.mediascanner.activity.MainActivity
-import fr.isep.mediascanner.adapter.ProductItemAdapter
-import fr.isep.mediascanner.adapter.RoomHeaderAdapter
+import fr.isep.mediascanner.adapter.media.ProductItemAdapter
+import fr.isep.mediascanner.adapter.media.RoomHeaderAdapter
 import fr.isep.mediascanner.database.AppDatabaseSingleton
 import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.model.local.Room

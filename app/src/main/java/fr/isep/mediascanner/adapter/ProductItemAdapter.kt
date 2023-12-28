@@ -1,7 +1,6 @@
 package fr.isep.mediascanner.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +9,11 @@ import android.widget.TextView
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import fr.isep.mediascanner.R
-import fr.isep.mediascanner.activity.ProductDetailsActivity
 import fr.isep.mediascanner.model.local.Product
-import fr.isep.mediascanner.activity.MainActivity
-import kotlinx.coroutines.launch
 
-class ProductItemAdapter(private val products: List<Product>,  private val scope: LifecycleCoroutineScope) : RecyclerView.Adapter<ProductItemAdapter.ProductViewHolder>() {
+abstract class ProductItemAdapter(private val products: List<Product>,  private val scope: LifecycleCoroutineScope) : RecyclerView.Adapter<ProductItemAdapter.ProductViewHolder>() {
 
-    private lateinit var context: Context
+    protected lateinit var context: Context
     
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val productNameTextView: TextView = itemView.findViewById(R.id.productNameTextView)
@@ -41,18 +37,6 @@ class ProductItemAdapter(private val products: List<Product>,  private val scope
             }
         } else {
             holder.productIconImageView.setImageResource(R.drawable.baseline_error_24)
-        }
-
-        // Set the click listener
-        holder.itemView.setOnClickListener {
-            scope.launch {
-                val intent = Intent(context, ProductDetailsActivity::class.java).apply {
-                    putExtra("PRODUCT", product)
-                }
-                if (context is MainActivity) {
-                    (context as MainActivity).getSetupProductDetailsRefreshForActivityResult().launch(intent)
-                }
-            }
         }
     }
 

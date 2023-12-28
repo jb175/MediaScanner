@@ -27,6 +27,8 @@ data class Product(
     val highest_recorded_price: Double?,
     val images: String?,
 ) : Parcelable {
+    constructor() : this(0, null, 0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readString(),

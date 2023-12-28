@@ -1,4 +1,4 @@
-package fr.isep.mediascanner.dao
+package fr.isep.mediascanner.dao.local
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -15,6 +15,9 @@ interface ProductDao {
 
     @Query("SELECT * FROM Product WHERE roomId = :roomId")
     suspend fun getProductsForRoom(roomId: Int): List<Product>
+
+    @Query("SELECT * FROM Product WHERE id = :productId")
+    suspend fun getProductById(productId: Int): Product
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(productItem: Product): Long

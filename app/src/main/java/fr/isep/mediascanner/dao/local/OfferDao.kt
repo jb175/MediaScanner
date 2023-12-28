@@ -1,4 +1,4 @@
-package fr.isep.mediascanner.dao
+package fr.isep.mediascanner.dao.local
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -16,4 +16,7 @@ interface OfferDao {
 
     @Query("DELETE FROM Offer WHERE productId = :productId")
     suspend fun deleteOffersForProduct(productId: Int)
+
+    @Query("SELECT * FROM Offer")
+    suspend fun getAll(): List<Offer>
 }

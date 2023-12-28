@@ -1,4 +1,4 @@
-package fr.isep.mediascanner.dao
+package fr.isep.mediascanner.dao.local
 
 import androidx.room.Dao
 import androidx.room.Delete

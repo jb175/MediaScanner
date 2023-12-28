@@ -2,10 +2,9 @@ package fr.isep.mediascanner.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import fr.isep.mediascanner.dao.NukeDao
-import fr.isep.mediascanner.dao.OfferDao
-import fr.isep.mediascanner.dao.ProductDao
-import fr.isep.mediascanner.dao.RoomDao
+import fr.isep.mediascanner.dao.local.OfferDao
+import fr.isep.mediascanner.dao.local.ProductDao
+import fr.isep.mediascanner.dao.local.RoomDao
 import fr.isep.mediascanner.model.local.Offer
 import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.model.local.Room
@@ -15,6 +14,4 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun roomDao(): RoomDao
     abstract fun productDao(): ProductDao
     abstract fun offerDao(): OfferDao
-
-    abstract fun nukeDao(): NukeDao
 }
