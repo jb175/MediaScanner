@@ -18,7 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MediaScanner"
-        tools:targetApi="29">
+        tools:targetApi="s">
         <activity
             android:name=".activity.MainActivity"
             android:exported="true">
@@ -33,6 +33,7 @@
         <activity android:name=".activity.SetupRoomActivity" />
         <activity android:name=".activity.ui.login.LoginActivity" />
         <activity android:name=".activity.RequestsActivity" />
+        <activity android:name=".activity.StartupActivity" />
     </application>
 
 </manifest>

@@ -37,8 +37,12 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         } else if (!isPasswordValid(password)) {
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
         } else {
-            _loginForm.value = LoginFormState(isDataValid = true)
+            _loginForm.value = LoginFormState(isDataValid = true, isPrivacyPolicyAccepted = _loginForm.value?.isPrivacyPolicyAccepted ?: false)
         }
+    }
+
+    fun updatePrivacyPolicyAccepted(isAccepted: Boolean) {
+        _loginForm.value = LoginFormState(isDataValid = _loginForm.value?.isDataValid ?: false, isPrivacyPolicyAccepted = isAccepted)
     }
 
     // A placeholder username validation check

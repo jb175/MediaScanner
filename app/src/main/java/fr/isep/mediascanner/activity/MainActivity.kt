@@ -3,6 +3,7 @@ package fr.isep.mediascanner.activity
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -113,6 +114,16 @@ class MainActivity : AppCompatActivity() {
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .build()
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+
+        val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+        val acceptedTerms = sharedPref.getBoolean("acceptedTerms", false)
+        if (!acceptedTerms) {
+            // Redirect to StartupActivity
+            val intent = Intent(this, StartupActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
     }
 
     override fun onDestroy() {
