@@ -3,14 +3,17 @@ package fr.isep.mediascanner.dao.remote
 import android.content.Context
 import android.util.Log
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
 import fr.isep.mediascanner.database.AppDatabaseSingleton
 import fr.isep.mediascanner.database.remote.FirebaseSingleton
 import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.model.local.Room
+import fr.isep.mediascanner.model.local.Offer
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class FirebaseDao(private val context: Context) {
     private val firebaseDatabase = FirebaseSingleton.getDatabaseInstance()
@@ -24,7 +27,7 @@ class FirebaseDao(private val context: Context) {
             // Add other user data here
         )
 
-        reference.setValue(userData)
+        reference.updateChildren(userData)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.i("Firebase", "Successfully uploaded user ${user.uid}")
@@ -141,38 +144,69 @@ class FirebaseDao(private val context: Context) {
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun getAllRooms(uid: String): List<Room> {
-        val reference = firebaseDatabase.getReference("users").child(uid).child("rooms")
-        val rooms = mutableListOf<Room>()
-
-        reference.get().addOnSuccessListener { snapshot ->
-            for (roomSnapshot in snapshot.children) {
-                val room = roomSnapshot.getValue(Room::class.java)
-                if (room != null) {
-                    rooms.add(room)
-                }
-            }
-        }
-
-        return rooms
+    suspend fun isLocalDataEmpty(): Boolean {
+        val roomDao = AppDatabaseSingleton.getDatabase(context).roomDao()
+        val rooms = roomDao.getAll()
+        return rooms.isEmpty()
     }
-
+    
     @OptIn(DelicateCoroutinesApi::class)
-    fun getAllProducts(uid: String): List<Product> {
-        val reference = firebaseDatabase.getReference("users").child(uid).child("rooms")
-        val products = mutableListOf<Product>()
+    fun downloadAllDataFromFirebase() {
+        val firebaseUser = FirebaseSingleton.getAuthInstance().currentUser
+        if (firebaseUser != null) {
+            Log.i("Firebase", "Starting to download all data for user ${firebaseUser.uid}")
 
-        reference.get().addOnSuccessListener { snapshot ->
-            for (roomSnapshot in snapshot.children) {
-                for (productSnapshot in roomSnapshot.child("products").children) {
-                    val product = productSnapshot.getValue(Product::class.java)
-                    if (product != null) {
-                        products.add(product)
+            val roomDao = AppDatabaseSingleton.getDatabase(context).roomDao()
+            val productDao = AppDatabaseSingleton.getDatabase(context).productDao()
+            val offerDao = AppDatabaseSingleton.getDatabase(context).offerDao()
+
+            val reference = firebaseDatabase.getReference("users").child(firebaseUser.uid).child("rooms")
+            reference.get().addOnSuccessListener { snapshot ->
+                GlobalScope.launch {
+                    for (roomSnapshot in snapshot.children) {
+                        val room = roomSnapshot.getValue(Room::class.java)
+                        if (room != null) {
+                            roomDao.insert(room)
+                            Log.i("FireDownload", "room $room")
+
+                            val productsSnapshot = roomSnapshot.child("products")
+                            for (productSnapshot in productsSnapshot.children) {
+                                val product = productSnapshot.getValue(Product::class.java)
+                                if (product != null) {
+                                    productDao.insert(product)
+                                    Log.i("FireDownload", "product $product")
+
+                                    val offersSnapshot = productSnapshot.child("offers")
+                                    for (offerSnapshot in offersSnapshot.children) {
+                                        val offer = offerSnapshot.getValue(Offer::class.java)
+                                        if (offer != null) {
+                                            offerDao.insert(offer)
+                                            Log.i("FireDownload", "offer $offer")
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
+                Log.i("Firebase", "Finished downloading all data for user ${firebaseUser.uid}")
+            }.addOnFailureListener { exception ->
+                Log.e("Firebase", "Failed to download all data for user ${firebaseUser.uid}", exception)
             }
         }
+    }
 
-        return products
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun syncronizeDataWithFirebase() {
+        GlobalScope.launch {
+            if (isLocalDataEmpty()) {
+                Log.i("NetworkCallback", "Local data is empty, downloading data from Firebase")
+                downloadAllDataFromFirebase()
+            } else {
+                Log.i("NetworkCallback", "Local data is not empty, uploading data to Firebase")
+                uploadAllDataToFirebase()
+            }
+        }
     }
 }

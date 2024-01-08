@@ -67,10 +67,10 @@ class MainActivity : AppCompatActivity() {
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
-            firebaseDao.uploadAllDataToFirebase()
+            Log.i("NetworkCallback", "Network is available")
+            firebaseDao.syncronizeDataWithFirebase()
         }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -124,6 +124,12 @@ class MainActivity : AppCompatActivity() {
     fun refreshSavedMediaFragment() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, MediaFragment())
+        transaction.commit()
+    }
+
+    fun refreshAccountFragment() {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, AccountFragment())
         transaction.commit()
     }
 

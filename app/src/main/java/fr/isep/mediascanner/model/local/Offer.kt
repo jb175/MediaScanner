@@ -11,17 +11,17 @@ import androidx.room.PrimaryKey
     onDelete = ForeignKey.CASCADE
 )])
 data class Offer(
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    val productId: Int, // Foreign key
-    val merchant: String?,
-    val domain: String?,
-    val title: String?,
-    val currency: String?,
-    val list_price: String?, // Consider changing this to Double if it's a numeric value
-    val price: Double?,
-    val shipping: String?,
-    val condition: String?,
-    val availability: String?,
-    val link: String?,
-    val updated_t: Double?
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val productId: Int = 0, // Foreign key
+    val merchant: String? = null,
+    val domain: String? = null,
+    val title: String? = null,
+    val currency: String? = null,
+    val list_price: String? = null, // Consider changing this to Double if it's a numeric value
+    val price: Double? = null,
+    val shipping: String? = null,
+    val condition: String? = null,
+    val availability: String? = null,
+    val link: String? = null,
+    val updated_t: Double? = null
 )
