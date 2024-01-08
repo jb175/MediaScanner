@@ -18,4 +18,15 @@
     <string name="scan_toast_noProductFound">Pas de produit trouvé pour ce code barre</string>
     <string name="productDetails_toast_notAMedia">Ce n\'est pas un média</string>
     <string name="scan_toast_notAValidBarcode">Ce n\'est pas un code barre valide</string>
+    <string name="title_activity_login">Page de connection</string>
+    <string name="prompt_email">Adresse mail</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in">Se connecter ou créer un compte</string>
+    <string name="action_sign_in_short">Se connecter</string>
+    <string name="welcome">Bienvenue !</string>
+    <string name="invalid_username">ce n\'est pas un nom d\'utilisateur valide</string>
+    <string name="invalid_password">Le mot de passe doit faire plus de 5 caractères</string>
+    <string name="login_failed">Connection refusée</string>
+    <string name="accept">Accepter</string>
+    <string name="decline">Refuser</string>
 </resources>
