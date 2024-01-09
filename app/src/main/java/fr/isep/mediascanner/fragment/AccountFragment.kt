@@ -33,7 +33,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import fr.isep.mediascanner.activity.RequestsActivity
-import fr.isep.mediascanner.activity.SetupRoomActivity
 import fr.isep.mediascanner.adapter.account.ProductItemAdapter
 import fr.isep.mediascanner.adapter.account.RoomHeaderAdapter
 import fr.isep.mediascanner.model.local.Product
@@ -71,12 +70,12 @@ class AccountFragment : Fragment() {
                     if (result.resultCode == Activity.RESULT_OK) {
                         currentUser = auth.currentUser!!
                         Log.println(Log.INFO, "MediaScannerAccount", "User logged in ${auth.currentUser}")
-                        firebaseDao.syncronizeDataWithFirebase()
+                        firebaseDao.synchronizeDataWithFirebase()
                     }
                 }.launch(intent)
             } else {
                 currentUser = auth.currentUser!!
-                firebaseDao.syncronizeDataWithFirebase()
+                firebaseDao.synchronizeDataWithFirebase()
             }
 
             val searchBar = view.findViewById<SearchView>(R.id.searchBar) // Replace with your actual SearchView id
@@ -145,7 +144,7 @@ class AccountFragment : Fragment() {
                     val room = roomSnapshot.getValue(Room::class.java)
                     if (room != null) {
                         Log.i("Firebase", "Room fetched: $room")
-                        adapters.add(RoomHeaderAdapter(room, lifecycleScope))
+                        adapters.add(RoomHeaderAdapter(room))
 
                         val productsReference = firebaseDatabase.getReference("users/$uid/rooms/${room.id}/products")
                         productsReference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -236,21 +235,6 @@ class AccountFragment : Fragment() {
                         Log.w("Firebase", "Failed to read access requests.", error.toException())
                     }
                 })
-        }
-    }
-    
-    // Function to accept or reject access request
-    fun respondToAccessRequest(requestId: String, senderUid: String, accepted: Boolean) {
-        val status = if (accepted) "accepted" else "rejected"
-        Log.i("Firebase", "Responding to access request $requestId with status $status")
-        firebaseDatabase.getReference("accessRequests").child(requestId).child("status").setValue(status)
-
-        if (accepted) {
-            val receiverUid = auth.currentUser?.uid
-            if (receiverUid != null) {
-                Log.i("Firebase", "Adding $senderUid to $receiverUid's allowed list")
-                firebaseDatabase.getReference("users").child(receiverUid).child("allowed").child(senderUid).setValue(true)
-            }
         }
     }
 }

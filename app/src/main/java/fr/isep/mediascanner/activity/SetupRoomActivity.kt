@@ -85,12 +85,11 @@ class SetupRoomActivity : AppCompatActivity() {
 
                     db = AppDatabaseSingleton.getDatabase(applicationContext)
 
-                    val newRoom = Room(
-                        id = 0,
-                        name = roomName
-                    )
-
                     lifecycleScope.launch {
+                        val newRoom = Room(
+                            id = db.roomDao().getHighestId()?.plus(1) ?: 0,
+                            name = roomName
+                        )
                         withContext(Dispatchers.IO) {
                             val roomIdLong = db.roomDao().insert(newRoom)
                             val roomId = roomIdLong.toInt()

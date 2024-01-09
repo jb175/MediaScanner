@@ -29,4 +29,20 @@
     <string name="login_failed">Connection refusée</string>
     <string name="accept">Accepter</string>
     <string name="decline">Refuser</string>
+    <string name="product_details_brand">Marque: %s</string>
+    <string name="product_details_isbn">ISBN: %s</string>
+    <string name="product_details_editor">Éditeur: %s</string>
+    <string name="product_details_category">Catégorie: %s</string>
+    <string name="product_details_unknow">Inconnu</string>
+    <string name="Login_read_policy_start">J\'ai lu et accepté la</string>
+    <string name="Login_read_policy_end">Politique de Confidentialité</string>
+    <string name="login_error_accept_policy">Vous devez accepté la Politique de Confidentialité</string>
+    <string name="mainMenu_scan_ortext">Ou</string>
+    <string name="mainMenu_account_title">Compte</string>
+    <string name="mainMenu_account_requestButton">Demandes d\'accés</string>
+    <string name="mainMenu_account_buttonRequestAccess">Demander l\'accés</string>
+    <string name="productActivity_imageDescription">Image Produit</string>
+    <string name="requestActivity_accept">Accepter</string>
+    <string name="requestActivity_deny">Refuser</string>
+    <string name="ActivityRequest_title">Demandes d\'accés</string>
 </resources>

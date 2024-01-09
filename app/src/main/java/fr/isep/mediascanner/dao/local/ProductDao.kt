@@ -30,4 +30,7 @@ interface ProductDao {
 
     @Query("DELETE FROM Product WHERE roomId = :roomId")
     suspend fun deleteProductsInRoom(roomId: Int)
+
+    @Query("SELECT MAX(id) FROM Product")
+    suspend fun getHighestId(): Int?
 }

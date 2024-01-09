@@ -19,4 +19,7 @@ interface OfferDao {
 
     @Query("SELECT * FROM Offer")
     suspend fun getAll(): List<Offer>
+
+    @Query("SELECT MAX(id) FROM Offer")
+    suspend fun getHighestId(): Int?
 }

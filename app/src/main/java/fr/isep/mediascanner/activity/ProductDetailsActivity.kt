@@ -45,8 +45,6 @@ class ProductDetailsActivity : AppCompatActivity() {
         val spinnerRooms = findViewById<Spinner>(R.id.spinnerRooms)
         val buttonAddToRoom = findViewById<Button>(R.id.buttonAddToRoom)
 
-
-        // Récupération des données du produit depuis l'intent
         val productItem = getParcelableExtra(intent, "PRODUCT_ITEM", ProductItem::class.java)
         val product = getParcelableExtra(intent, "PRODUCT", Product::class.java)
 
@@ -127,7 +125,6 @@ class ProductDetailsActivity : AppCompatActivity() {
         }
 
         if (productItem != null) {
-            // Assignation des vues du layout
             val titleTextView = findViewById<TextView>(R.id.textViewTitle)
             val descriptionTextView = findViewById<TextView>(R.id.textViewDescription)
             val brandTextView = findViewById<TextView>(R.id.textViewBrand)
@@ -135,13 +132,12 @@ class ProductDetailsActivity : AppCompatActivity() {
             val publisherTextView = findViewById<TextView>(R.id.textViewPublisher)
             val categoryTextView = findViewById<TextView>(R.id.textViewCategory)
 
-            // Affichage des détails du produit dans les vues
-            titleTextView.text = productItem.title  ?: "Unknown"
-            descriptionTextView.text = productItem.description  ?: "Unknown"
-            brandTextView.text = String.format("Marque: %s", (productItem.brand ?: "Unknown"))
-            isbnTextView.text = String.format("ISBN: %s", (productItem.isbn ?: "Unknown"))
-            publisherTextView.text = String.format("Éditeur: %s", (productItem.publisher ?: "Unknown"))
-            categoryTextView.text = String.format("Catégorie: %s", (productItem.category ?: "Unknown"))
+            titleTextView.text = productItem.title  ?: getString(R.string.product_details_unknow)
+            descriptionTextView.text = productItem.description  ?: getString(R.string.product_details_unknow)
+            brandTextView.text = String.format(getString(R.string.product_details_brand), (productItem.brand ?: getString(R.string.product_details_unknow)))
+            isbnTextView.text = String.format(getString(R.string.product_details_isbn), (productItem.isbn ?: getString(R.string.product_details_unknow)))
+            publisherTextView.text = String.format(getString(R.string.product_details_editor), (productItem.publisher ?: getString(R.string.product_details_unknow)))
+            categoryTextView.text = String.format(getString(R.string.product_details_category), (productItem.category ?: getString(R.string.product_details_unknow)))
 
             if (!productItem.images.isNullOrEmpty()) {
                 val imageView = findViewById<ImageView>(R.id.imageViewProduct)
@@ -167,8 +163,13 @@ class ProductDetailsActivity : AppCompatActivity() {
                         val selectedRoom = rooms[spinnerRooms.selectedItemPosition]
                         lifecycleScope.launch {
                             withContext(Dispatchers.IO) {
+                                // Get the highest product ID currently in the database
+                                val highestProductId = db.productDao().getHighestId()
+                                // Assign the new product a unique ID
+                                val newProductId = if (highestProductId != null) highestProductId + 1 else 1
+                        
                                 val productDB = Product(
-                                    id = 0,
+                                    id = newProductId, // Use the unique ID
                                     title = productItem.title,
                                     roomId = selectedRoom.id,
                                     ean = productItem.ean,
@@ -239,7 +240,6 @@ class ProductDetailsActivity : AppCompatActivity() {
 
         } else if(product != null) {
 
-            // Assignation des vues du layout
             val titleTextView = findViewById<TextView>(R.id.textViewTitle)
             val descriptionTextView = findViewById<TextView>(R.id.textViewDescription)
             val brandTextView = findViewById<TextView>(R.id.textViewBrand)
@@ -247,13 +247,12 @@ class ProductDetailsActivity : AppCompatActivity() {
             val publisherTextView = findViewById<TextView>(R.id.textViewPublisher)
             val categoryTextView = findViewById<TextView>(R.id.textViewCategory)
 
-            // Affichage des détails du produit dans les vues
-            titleTextView.text = product.title  ?: "Unknown"
-            descriptionTextView.text = product.description  ?: "Unknown"
-            brandTextView.text = String.format("Marque: %s", (product.brand ?: "Unknown"))
-            isbnTextView.text = String.format("ISBN: %s", (product.isbn ?: "Unknown"))
-            publisherTextView.text = String.format("Éditeur: %s", (product.publisher ?: "Unknown"))
-            categoryTextView.text = String.format("Catégorie: %s", (product.category ?: "Unknown"))
+            titleTextView.text = product.title  ?: getString(R.string.product_details_unknow)
+            descriptionTextView.text = product.description  ?: getString(R.string.product_details_unknow)
+            brandTextView.text = String.format(getString(R.string.product_details_brand), (product.brand ?: getString(R.string.product_details_unknow)))
+            isbnTextView.text = String.format(getString(R.string.product_details_isbn), (product.isbn ?: getString(R.string.product_details_unknow)))
+            publisherTextView.text = String.format(getString(R.string.product_details_editor), (product.publisher ?: getString(R.string.product_details_unknow)))
+            categoryTextView.text = String.format(getString(R.string.product_details_category), (product.category ?: getString(R.string.product_details_unknow)))
 
             if (!product.images.isNullOrEmpty()) {
                 val imageView = findViewById<ImageView>(R.id.imageViewProduct)

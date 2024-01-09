@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity data class Room(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey val id: Int,
     var name: String?
 ) : Parcelable {
     constructor() : this(0, null) // No-argument constructor for Firebase

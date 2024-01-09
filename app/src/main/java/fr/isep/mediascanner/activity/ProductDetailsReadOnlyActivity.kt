@@ -17,12 +17,9 @@ class ProductDetailsReadOnlyActivity : AppCompatActivity() {
         setContentView(R.layout.activity_product_details_read_only)
         
 
-        // Récupération des données du produit depuis l'intent
         val product = getParcelableExtra(intent, "PRODUCT", Product::class.java)
 
         if(product != null) {
-
-            // Assignation des vues du layout
             val titleTextView = findViewById<TextView>(R.id.textViewTitle)
             val descriptionTextView = findViewById<TextView>(R.id.textViewDescription)
             val brandTextView = findViewById<TextView>(R.id.textViewBrand)
@@ -30,13 +27,12 @@ class ProductDetailsReadOnlyActivity : AppCompatActivity() {
             val publisherTextView = findViewById<TextView>(R.id.textViewPublisher)
             val categoryTextView = findViewById<TextView>(R.id.textViewCategory)
 
-            // Affichage des détails du produit dans les vues
-            titleTextView.text = product.title  ?: "Unknown"
-            descriptionTextView.text = product.description  ?: "Unknown"
-            brandTextView.text = String.format("Marque: %s", (product.brand ?: "Unknown"))
-            isbnTextView.text = String.format("ISBN: %s", (product.isbn ?: "Unknown"))
-            publisherTextView.text = String.format("Éditeur: %s", (product.publisher ?: "Unknown"))
-            categoryTextView.text = String.format("Catégorie: %s", (product.category ?: "Unknown"))
+            titleTextView.text = product.title  ?: getString(R.string.product_details_unknow)
+            descriptionTextView.text = product.description  ?: getString(R.string.product_details_unknow)
+            brandTextView.text = String.format(getString(R.string.product_details_brand), (product.brand ?: getString(R.string.product_details_unknow)))
+            isbnTextView.text = String.format(getString(R.string.product_details_isbn), (product.isbn ?: getString(R.string.product_details_unknow)))
+            publisherTextView.text = String.format(getString(R.string.product_details_editor), (product.publisher ?: getString(R.string.product_details_unknow)))
+            categoryTextView.text = String.format(getString(R.string.product_details_category), (product.category ?: getString(R.string.product_details_unknow)))
 
             if (!product.images.isNullOrEmpty()) {
                 val imageView = findViewById<ImageView>(R.id.imageViewProduct)

@@ -16,12 +16,12 @@
         android:id="@+id/accept"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Accept" />
+        android:text="@string/requestActivity_accept" />
 
     <Button
         android:id="@+id/deny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Deny" />
+        android:text="@string/requestActivity_deny" />
 
 </LinearLayout>

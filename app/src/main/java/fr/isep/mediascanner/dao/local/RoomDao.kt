@@ -24,4 +24,7 @@ interface RoomDao {
 
     @Delete
     suspend fun delete(room: Room)
+
+    @Query("SELECT MAX(id) FROM Room")
+    suspend fun getHighestId(): Int?
 }

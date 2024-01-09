@@ -78,14 +78,14 @@ class LoginActivity : AppCompatActivity() {
         val privacyPolicyText = binding.privacyPolicyText
         val privacyPolicyCheckbox = binding.privacyPolicyCheckbox
 
-        val fullText = "I have read and accept the Privacy Policy"
+        val fullText = getString(R.string.Login_read_policy_start)+getString(R.string.Login_read_policy_end)
         val spannableString = SpannableString(fullText)
         val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(textView: View) {
                 val url = "https://raw.githubusercontent.com/jb175/MediaScanner/main/privacy_policy_online.html"
 
                 val request = DownloadManager.Request(Uri.parse(url))
-                    .setTitle("Privacy Policy")
+                    .setTitle(getString(R.string.Login_read_policy_end))
                     .setDescription("Downloading")
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                     .setAllowedOverMetered(true)
@@ -102,8 +102,8 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        val start = fullText.indexOf("Privacy Policy")
-        val end = start + "Privacy Policy".length
+        val start = fullText.indexOf(getString(R.string.Login_read_policy_end))
+        val end = start + getString(R.string.Login_read_policy_end).length
         spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spannableString.setSpan(ForegroundColorSpan(Color.RED), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -146,7 +146,7 @@ class LoginActivity : AppCompatActivity() {
                     if (!privacyPolicyCheckbox.isChecked) {
                         Toast.makeText(
                             this.context,
-                            "You must accept the Privacy Policy to login",
+                            context.getString(R.string.login_error_accept_policy),
                             Toast.LENGTH_SHORT
                         ).show()
                         return@setOnClickListener

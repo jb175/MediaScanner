@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.model.local.Product

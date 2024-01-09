@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
             Log.i("NetworkCallback", "Network is available")
-            firebaseDao.syncronizeDataWithFirebase()
+            firebaseDao.synchronizeDataWithFirebase()
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {

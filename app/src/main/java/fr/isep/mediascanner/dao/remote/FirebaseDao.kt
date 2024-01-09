@@ -11,30 +11,18 @@ import fr.isep.mediascanner.model.local.Offer
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class FirebaseDao(private val context: Context) {
     private val firebaseDatabase = FirebaseSingleton.getDatabaseInstance()
 
-    @OptIn(DelicateCoroutinesApi::class)
-    fun uploadUserToFirebase(user: FirebaseUser) {
+    private fun uploadUserToFirebase(user: FirebaseUser) {
         val reference = firebaseDatabase.getReference("users").child(user.uid)
 
         val userData = mapOf(
             "email" to user.email,
-            // Add other user data here
         )
 
         reference.updateChildren(userData)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.i("Firebase", "Successfully uploaded user ${user.uid}")
-                } else {
-                    Log.e("Firebase", "Failed to upload user", task.exception)
-                }
-            }
             .addOnFailureListener { exception ->
                 Log.e("Firebase", "Error uploading user", exception)
             }
@@ -44,21 +32,11 @@ class FirebaseDao(private val context: Context) {
     fun uploadRoomsToFirebase(userId: String) {
         val roomDao = AppDatabaseSingleton.getDatabase(context).roomDao()
         GlobalScope.launch {
-            Log.i("Firebase", "Starting to upload rooms for user $userId")
-
             val rooms = roomDao.getAll()
             val reference = firebaseDatabase.getReference("users").child(userId).child("rooms")
 
             for (room in rooms) {
-                Log.i("Firebase", "Uploading room ${room.id}")
                 reference.child(room.id.toString()).setValue(room)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.i("Firebase", "Successfully uploaded room ${room.id}")
-                    } else {
-                        Log.e("Firebase", "Failed to upload room", task.exception)
-                    }
-                }
                 .addOnFailureListener { exception ->
                     Log.e("Firebase", "Error uploading room", exception)
                 }
@@ -74,12 +52,9 @@ class FirebaseDao(private val context: Context) {
 
             for (product in products) {
                 val reference = firebaseDatabase.getReference("users").child(userId).child("rooms").child(product.roomId.toString()).child("products")
-                reference.child(product.id.toString()).setValue(product).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.i("Firebase", "Successfully uploaded product ${product.id}")
-                    } else {
-                        Log.e("Firebase", "Failed to upload product", task.exception)
-                    }
+                reference.child(product.id.toString()).setValue(product)
+                .addOnFailureListener { exception ->
+                    Log.e("Firebase", "Failed to upload product", exception)
                 }
             }
         }
@@ -97,43 +72,15 @@ class FirebaseDao(private val context: Context) {
                 val roomId = product.roomId
 
                 val reference = firebaseDatabase.getReference("users").child(userId).child("rooms").child(roomId.toString()).child("products").child(offer.productId.toString()).child("offers")
-                reference.child(offer.id.toString()).setValue(offer).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.i("Firebase", "Successfully uploaded offer ${offer.id}")
-                    } else {
-                        Log.e("Firebase", "Failed to upload offer", task.exception)
-                    }
+                reference.child(offer.id.toString()).setValue(offer)
+                .addOnFailureListener { exception ->
+                    Log.e("Firebase", "Failed to upload offer", exception)
                 }
             }
         }
     }
 
-    fun getUidByEmail(email: String) {
-        val reference = firebaseDatabase.getReference("emailsToUids")
-        reference.child(email.replace(".", ",")).get()
-            .addOnSuccessListener { snapshot ->
-                val uid = snapshot.getValue(String::class.java)
-                Log.i("Firebase", "Successfully getting UID for ${email}: ${uid}")
-
-            }
-            .addOnFailureListener { exception ->
-                Log.e("Firebase", "Error getting UID", exception)
-            }
-    }
-
-    fun checkIfDataUploaded(user: FirebaseUser, onSuccess: (Boolean) -> Unit, onFailure: (Exception) -> Unit) {
-        val reference = firebaseDatabase.getReference("users").child(user.uid).child("dataUploaded")
-
-        reference.get().addOnSuccessListener { dataSnapshot ->
-            val dataUploaded = dataSnapshot.getValue(Boolean::class.java) ?: false
-            onSuccess(dataUploaded)
-        }.addOnFailureListener { exception ->
-            onFailure(exception)
-        }
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    fun uploadAllDataToFirebase() {
+    private fun uploadAllDataToFirebase() {
         val firebaseUser = FirebaseSingleton.getAuthInstance().currentUser
         if (firebaseUser != null) {
             uploadUserToFirebase(firebaseUser)
@@ -143,8 +90,7 @@ class FirebaseDao(private val context: Context) {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    suspend fun isLocalDataEmpty(): Boolean {
+    private suspend fun isLocalDataEmpty(): Boolean {
         val roomDao = AppDatabaseSingleton.getDatabase(context).roomDao()
         val rooms = roomDao.getAll()
         return rooms.isEmpty()
@@ -173,6 +119,8 @@ class FirebaseDao(private val context: Context) {
                             for (productSnapshot in productsSnapshot.children) {
                                 val product = productSnapshot.getValue(Product::class.java)
                                 if (product != null) {
+                                    // Set the roomId of the product to the id of the room
+                                    product.roomId = room.id
                                     productDao.insert(product)
                                     Log.i("FireDownload", "product $product")
 
@@ -180,8 +128,20 @@ class FirebaseDao(private val context: Context) {
                                     for (offerSnapshot in offersSnapshot.children) {
                                         val offer = offerSnapshot.getValue(Offer::class.java)
                                         if (offer != null) {
-                                            offerDao.insert(offer)
-                                            Log.i("FireDownload", "offer $offer")
+                                            // Create a new Offer with the desired id and other properties copied from the original Offer
+                                            val newOffer = offerSnapshot.key?.let {
+                                                Offer(
+                                                    id = it.toInt(), // Use the snapshot key as the id
+                                                    productId = product.id,
+                                                    // Copy other properties from the original Offer
+                                                    title = offer.title,
+                                                    price = offer.price,
+                                                    // Add other properties as needed...
+                                                )
+                                            }
+                                            if (newOffer != null)
+                                                offerDao.insert(newOffer)
+                                            Log.i("FireDownload", "offer $newOffer")
                                         }
                                     }
                                 }
@@ -198,7 +158,7 @@ class FirebaseDao(private val context: Context) {
 
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun syncronizeDataWithFirebase() {
+    fun synchronizeDataWithFirebase() {
         GlobalScope.launch {
             if (isLocalDataEmpty()) {
                 Log.i("NetworkCallback", "Local data is empty, downloading data from Firebase")

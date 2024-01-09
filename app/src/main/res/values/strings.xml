@@ -28,4 +28,20 @@
     <string name="login_failed">"Login failed"</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
+    <string name="product_details_brand">Brand: %s</string>
+    <string name="product_details_isbn">ISBN: %s</string>
+    <string name="product_details_editor">Editor: %s</string>
+    <string name="product_details_category">Category: %s</string>
+    <string name="product_details_unknow">Unknown</string>
+    <string name="Login_read_policy_start">I have read and accept the</string>
+    <string name="Login_read_policy_end">Privacy Policy</string>
+    <string name="login_error_accept_policy">You must accept the Privacy Policy to login</string>
+    <string name="mainMenu_scan_ortext">Or</string>
+    <string name="mainMenu_account_title">Account</string>
+    <string name="mainMenu_account_requestButton">Requests</string>
+    <string name="mainMenu_account_buttonRequestAccess">Request Access</string>
+    <string name="productActivity_imageDescription">Product Image</string>
+    <string name="requestActivity_accept">Accept</string>
+    <string name="requestActivity_deny">Deny</string>
+    <string name="ActivityRequest_title">Requests</string>
 </resources>
