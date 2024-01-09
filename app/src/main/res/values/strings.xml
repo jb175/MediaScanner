@@ -28,7 +28,7 @@
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
     <string name="product_details_brand">Brand: %s</string>
-    <string name="product_details_isbn">ISBN: %s</string>
+    <string name="product_details_isbn">ISBN/EAN/UPC: %s</string>
     <string name="product_details_editor">Editor: %s</string>
     <string name="product_details_category">Category: %s</string>
     <string name="product_details_unknown">Unknown</string>

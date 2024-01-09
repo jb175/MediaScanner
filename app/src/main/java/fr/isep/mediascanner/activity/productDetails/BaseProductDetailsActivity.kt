@@ -19,7 +19,6 @@ abstract class BaseProductDetailsActivity : AppCompatActivity() {
     private lateinit var categoryTextView: TextView
     private lateinit var imageView: ImageView
 
-    protected var imageURL = ""
     protected lateinit var product: Product
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,21 +38,26 @@ abstract class BaseProductDetailsActivity : AppCompatActivity() {
         titleTextView.text = product.title  ?: getString(R.string.product_details_unknown)
         descriptionTextView.text = product.description  ?: getString(R.string.product_details_unknown)
         brandTextView.text = String.format(getString(R.string.product_details_brand), (product.brand ?: getString(R.string.product_details_unknown)))
-        isbnTextView.text = String.format(getString(R.string.product_details_isbn), (product.isbn ?: getString(R.string.product_details_unknown)))
+        isbnTextView.text = String.format(getString(R.string.product_details_isbn), (product.isbn ?: product.ean ?: product.upc ?: getString(R.string.product_details_unknown)))
         publisherTextView.text = String.format(getString(R.string.product_details_editor), (product.publisher ?: getString(R.string.product_details_unknown)))
         categoryTextView.text = String.format(getString(R.string.product_details_category), (product.category ?: getString(R.string.product_details_unknown)))
 
         if (!product.images.isNullOrEmpty()) {
-            Picasso.get().load(product.images).fetch(object : Callback {
-                override fun onSuccess() {
-                    Picasso.get().load(product.images).into(imageView)
-                    imageURL = product.images!!
+            for (imageUrl in product.images!!) {
+                if (imageUrl.isEmpty()) {
+                    continue // Skip this iteration if the URL is null or empty
                 }
+                Picasso.get().load(imageUrl).fetch(object : Callback {
+                    override fun onSuccess() {
+                        Picasso.get().load(imageUrl).into(imageView)
+                        return
+                    }
 
-                override fun onError(e: java.lang.Exception?) {
-                    //do nothing
-                }
-            })
+                    override fun onError(e: java.lang.Exception?) {
+                        // If an error occurs, continue to the next image URL
+                    }
+                })
+            }
         }
     }
 

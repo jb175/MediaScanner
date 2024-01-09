@@ -25,7 +25,7 @@ data class Product(
     val currency: String?,
     val lowest_recorded_price: Double?,
     val highest_recorded_price: Double?,
-    val images: String?,
+    val images: List<String>?,
 ) : Parcelable {
     constructor() : this(0, null, 0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
 
@@ -48,7 +48,7 @@ data class Product(
         parcel.readString(),
         parcel.readValue(Double::class.java.classLoader) as? Double,
         parcel.readValue(Double::class.java.classLoader) as? Double,
-        parcel.readString()
+        parcel.createStringArrayList()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -70,7 +70,7 @@ data class Product(
         parcel.writeString(currency)
         parcel.writeValue(lowest_recorded_price)
         parcel.writeValue(highest_recorded_price)
-        parcel.writeString(images)
+        parcel.writeStringList(images)
     }
 
     override fun describeContents(): Int {

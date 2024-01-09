@@ -50,7 +50,7 @@ class ScanProductProductDetailsActivity : LocalBaseProductDetailsActivity() {
                                 currency = productItem.currency,
                                 lowest_recorded_price = productItem.lowest_recorded_price,
                                 highest_recorded_price = productItem.highest_recorded_price,
-                                images = imageURL
+                                images = productItem.images
                             )
                             val productIdLong = db.productDao().insert(productDB)
                             val productId = productIdLong.toInt()
@@ -123,7 +123,7 @@ class ScanProductProductDetailsActivity : LocalBaseProductDetailsActivity() {
             currency = productItem.currency,
             lowest_recorded_price = productItem.lowest_recorded_price,
             highest_recorded_price = productItem.highest_recorded_price,
-            images = imageURL
+            images = productItem.images
         )
     }
 }
