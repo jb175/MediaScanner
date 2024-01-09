@@ -33,7 +33,7 @@
     <string name="product_details_editor">Éditeur: %s</string>
     <string name="product_details_category">Catégorie: %s</string>
     <string name="product_details_unknown">Inconnu</string>
-    <string name="Login_read_policy_start">J\'ai lu et accepté la</string>
+    <string name="Login_read_policy_start">"J'ai lu et accepté la "</string>
     <string name="Login_read_policy_end">Politique de Confidentialité</string>
     <string name="login_error_accept_policy">Vous devez accepté la Politique de Confidentialité</string>
     <string name="mainMenu_scan_orText">Ou</string>

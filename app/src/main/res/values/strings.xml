@@ -32,7 +32,7 @@
     <string name="product_details_editor">Editor: %s</string>
     <string name="product_details_category">Category: %s</string>
     <string name="product_details_unknown">Unknown</string>
-    <string name="Login_read_policy_start">I have read and accept the</string>
+    <string name="Login_read_policy_start">"I have read and accept the "</string>
     <string name="Login_read_policy_end">Privacy Policy</string>
     <string name="login_error_accept_policy">You must accept the Privacy Policy to login</string>
     <string name="mainMenu_scan_orText">Or</string>
