@@ -17,7 +17,7 @@ class RoomHeaderAdapter(private val room: Room, private val scope: LifecycleCoro
                     putExtra("ROOM", room)
                 }
                 if (context is MainActivity) {
-                    (context as MainActivity).getSetupProductDetailsRefreshForActivityResult().launch(intent)
+                    (context as MainActivity).getSetupProductDetailsResultLauncher().launch(intent)
                 }
             }
         }

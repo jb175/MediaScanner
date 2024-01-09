@@ -74,7 +74,10 @@ class AccountFragment : Fragment() {
                 firebaseDao.synchronizeDataWithFirebase()
             }
 
-            val searchBar = view.findViewById<SearchView>(R.id.searchBar) // Replace with your actual SearchView id
+            val searchBar = view.findViewById<SearchView>(R.id.searchBar)
+            val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+            val requestAccessButton = view.findViewById<Button>(R.id.requestAccessButton)
+
             searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     searchUserByEmail(query)
@@ -82,6 +85,8 @@ class AccountFragment : Fragment() {
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
+                    recyclerView.adapter = null
+                    requestAccessButton.visibility = View.GONE
                     return false
                 }
             })
@@ -121,7 +126,7 @@ class AccountFragment : Fragment() {
         Log.i("Firebase", "User found : $uid")
 
         val requestAccessButton = view?.findViewById<Button>(R.id.requestAccessButton)
-        requestAccessButton?.visibility = View.INVISIBLE
+        requestAccessButton?.visibility = View.GONE
         requestAccessButton?.setOnClickListener {
             sendAccessRequest(uid)
         }

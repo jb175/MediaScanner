@@ -20,7 +20,7 @@ class ProductItemAdapter(private val products: List<Product>,  private val scope
                     putExtra("PRODUCT", product)
                 }
                 if (context is MainActivity) {
-                    (context as MainActivity).getSetupProductDetailsRefreshForActivityResult().launch(intent)
+                    (context as MainActivity).getSetupProductDetailsResultLauncher().launch(intent)
                 }
             }
         }

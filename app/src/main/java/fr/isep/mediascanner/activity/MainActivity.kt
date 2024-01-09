@@ -56,20 +56,21 @@ class MainActivity : AppCompatActivity() {
         .setBeepEnabled(false)
         .setBarcodeImageEnabled(false)
 
-    private val setupProductDetailsRefreshForActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private val setupProductDetailsResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
+            firebaseDao.synchronizeDataWithFirebase()
             switchFragment(MediaFragment())
         }
     }
 
-    private val setupProductDetailsReadOnlyRefreshForActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private val setupProductDetailsOtherAccountResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
+            firebaseDao.synchronizeDataWithFirebase()
             switchFragment(AccountFragment())
         }
     }
 
     private val setupLoginResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        Log.println(Log.INFO, "MediaScannerAccount", "result $result")
         if (result.resultCode == Activity.RESULT_OK) {
             switchFragment(AccountFragment())
         }
@@ -168,8 +169,8 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    fun getSetupProductDetailsRefreshForActivityResult() = setupProductDetailsRefreshForActivityResult
-    fun getSetupProductDetailsReadOnlyRefreshForActivityResult() = setupProductDetailsReadOnlyRefreshForActivityResult
+    fun getSetupProductDetailsResultLauncher() = setupProductDetailsResultLauncher
+    fun getSetupProductDetailsOtherAccountResultLauncher() = setupProductDetailsOtherAccountResultLauncher
 
     fun getSetupLoginResultLauncher() = setupLoginResultLauncher
 

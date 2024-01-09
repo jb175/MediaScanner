@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -13,35 +14,47 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
-            android:paddingTop="9dp"
+            android:paddingTop="20dp"
             android:paddingEnd="16dp"
             android:paddingBottom="9dp"
             android:text="@string/mainMenu_account_title"
             android:textColor="@color/black"
             android:textSize="34sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchBar"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:queryHint="Search for a user by email"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/colorAccent"
+            app:strokeWidth="2dp">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:queryHint="Search for a user by email" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <Button
             android:id="@+id/requestAccessButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/mainMenu_account_buttonRequestAccess"
-            android:visibility="gone"
-            android:layout_marginTop="16dp" />
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -51,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_margin="16dp"
-        android:src="@drawable/baseline_notification_add_24"
-        android:contentDescription="@string/mainMenu_account_requestButton" />
+        android:contentDescription="@string/mainMenu_account_requestButton"
+        android:src="@drawable/baseline_notification_add_24" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
