@@ -11,12 +11,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import fr.isep.mediascanner.activity.ProductDetailsActivity
 import fr.isep.mediascanner.activity.MainActivity
 import fr.isep.mediascanner.model.api.ProductItem
 import fr.isep.mediascanner.model.api.ProductResponse
 import fr.isep.mediascanner.service.ProductService
 import fr.isep.mediascanner.R
+import fr.isep.mediascanner.activity.productDetails.ScanProductProductDetailsActivity
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -80,7 +80,7 @@ class ScanFragment : Fragment() {
                             val productItem: ProductItem? = productResponse.items?.get(0)
                             if (productItem != null) {
                                 //start new activity
-                                val intent = Intent(context as MainActivity, ProductDetailsActivity::class.java)
+                                val intent = Intent(context as MainActivity, ScanProductProductDetailsActivity::class.java)
                                 intent.putExtra("PRODUCT_ITEM", productItem)
                                 startActivity(intent)
                             } else {

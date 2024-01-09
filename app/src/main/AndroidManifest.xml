@@ -28,12 +28,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ProductDetailsActivity" />
-        <activity android:name=".activity.ProductDetailsReadOnlyActivity" />
         <activity android:name=".activity.SetupRoomActivity" />
         <activity android:name=".activity.ui.login.LoginActivity" />
         <activity android:name=".activity.RequestsActivity" />
         <activity android:name=".activity.StartupActivity" />
+        <activity android:name=".activity.productDetails.MediaProductDetailsActivity" />
+        <activity android:name=".activity.productDetails.ScanProductProductDetailsActivity" />
+        <activity android:name=".activity.productDetails.OtherAccountProductDetailsActivity" />
     </application>
 
 </manifest>

@@ -2,9 +2,9 @@ package fr.isep.mediascanner.adapter.media
 
 import android.content.Intent
 import androidx.lifecycle.LifecycleCoroutineScope
-import fr.isep.mediascanner.activity.ProductDetailsActivity
 import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.activity.MainActivity
+import fr.isep.mediascanner.activity.productDetails.MediaProductDetailsActivity
 import kotlinx.coroutines.launch
 
 class ProductItemAdapter(private val products: List<Product>,  private val scope: LifecycleCoroutineScope) : fr.isep.mediascanner.adapter.ProductItemAdapter(products) {
@@ -16,7 +16,7 @@ class ProductItemAdapter(private val products: List<Product>,  private val scope
         // Set the click listener
         holder.itemView.setOnClickListener {
             scope.launch {
-                val intent = Intent(context, ProductDetailsActivity::class.java).apply {
+                val intent = Intent(context, MediaProductDetailsActivity::class.java).apply {
                     putExtra("PRODUCT", product)
                 }
                 if (context is MainActivity) {
