@@ -1,10 +1,12 @@
 package fr.isep.mediascanner.fragment
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -109,6 +111,8 @@ class AccountFragment : Fragment() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val uid = dataSnapshot.value as String?
                 if (uid != null) {
+                    val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                    imm?.hideSoftInputFromWindow(view?.windowToken, 0)
                     displayUserRoomsAndProducts(uid)
                 } else {
                     Log.i("Firebase", "No user found with email $email")
@@ -177,7 +181,8 @@ class AccountFragment : Fragment() {
             override fun onCancelled(error: DatabaseError) {
                 Log.w("Firebase", "Failed to read rooms.", error.toException())
                 if (error.message.contains("Permission denied")) {
-                    Toast.makeText(context, "You don't have access to this user's data", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,
+                        getString(R.string.mainMenu_account_accessRefused), Toast.LENGTH_SHORT).show()
                     requestAccessButton?.visibility = View.VISIBLE
                 }
             }

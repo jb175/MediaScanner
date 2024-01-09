@@ -44,4 +44,5 @@
     <string name="requestActivity_accept">Accepter</string>
     <string name="requestActivity_deny">Refuser</string>
     <string name="ActivityRequest_title">Demandes d\'accés</string>
+    <string name="mainMenu_account_accessRefused">Vous n\'avez pas accés aux données de cet utilisateur</string>
 </resources>
