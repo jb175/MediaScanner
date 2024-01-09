@@ -1,16 +1,10 @@
 package fr.isep.mediascanner.activity.ui.login
 
-import android.app.Activity
 import android.app.DownloadManager
-import android.content.Context
 import android.graphics.Color
 import android.net.Uri
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.os.Environment
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
@@ -23,6 +17,10 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.databinding.ActivityLoginBinding
 
@@ -42,8 +40,7 @@ class LoginActivity : AppCompatActivity() {
         val login = binding.login
         val loading = binding.loading
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
+        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())[LoginViewModel::class.java]
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
@@ -69,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
             }
-            setResult(Activity.RESULT_OK)
+            setResult(RESULT_OK)
 
             //Complete and destroy login activity once successful
             finish()
@@ -92,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
                     .setAllowedOverRoaming(true)
                     .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "privacy_policy.html")
 
-                val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
                 downloadManager.enqueue(request)
             }
 

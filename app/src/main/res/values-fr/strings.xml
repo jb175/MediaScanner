@@ -18,7 +18,6 @@
     <string name="scan_toast_noProductFound">Pas de produit trouvé pour ce code barre</string>
     <string name="productDetails_toast_notAMedia">Ce n\'est pas un média</string>
     <string name="scan_toast_notAValidBarcode">Ce n\'est pas un code barre valide</string>
-    <string name="title_activity_login">Page de connection</string>
     <string name="prompt_email">Adresse mail</string>
     <string name="prompt_password">Mot de passe</string>
     <string name="action_sign_in">Se connecter ou créer un compte</string>
@@ -33,11 +32,11 @@
     <string name="product_details_isbn">ISBN: %s</string>
     <string name="product_details_editor">Éditeur: %s</string>
     <string name="product_details_category">Catégorie: %s</string>
-    <string name="product_details_unknow">Inconnu</string>
+    <string name="product_details_unknown">Inconnu</string>
     <string name="Login_read_policy_start">J\'ai lu et accepté la</string>
     <string name="Login_read_policy_end">Politique de Confidentialité</string>
     <string name="login_error_accept_policy">Vous devez accepté la Politique de Confidentialité</string>
-    <string name="mainMenu_scan_ortext">Ou</string>
+    <string name="mainMenu_scan_orText">Ou</string>
     <string name="mainMenu_account_title">Compte</string>
     <string name="mainMenu_account_requestButton">Demandes d\'accés</string>
     <string name="mainMenu_account_buttonRequestAccess">Demander l\'accés</string>

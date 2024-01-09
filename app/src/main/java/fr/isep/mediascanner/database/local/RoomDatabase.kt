@@ -1,4 +1,4 @@
-package fr.isep.mediascanner.database
+package fr.isep.mediascanner.database.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

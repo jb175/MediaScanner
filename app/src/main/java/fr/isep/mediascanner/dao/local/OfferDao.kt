@@ -11,9 +11,6 @@ interface OfferDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(offer: Offer)
 
-    @Query("SELECT * FROM Offer WHERE productId = :productId")
-    suspend fun getOffersForProduct(productId: Int): List<Offer>
-
     @Query("DELETE FROM Offer WHERE productId = :productId")
     suspend fun deleteOffersForProduct(productId: Int)
 

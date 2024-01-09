@@ -21,7 +21,7 @@ class ProductItemAdapter(private val products: List<Product>,  private val scope
         
             if (context is MainActivity) {
                 scope.launch {
-                    (context as MainActivity).getsetupProductDetailsReadOnlyRefreshForActivityResult().launch(intent)
+                    (context as MainActivity).getSetupProductDetailsReadOnlyRefreshForActivityResult().launch(intent)
                 }
             }
         }

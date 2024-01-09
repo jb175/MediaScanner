@@ -27,12 +27,12 @@ class ProductDetailsReadOnlyActivity : AppCompatActivity() {
             val publisherTextView = findViewById<TextView>(R.id.textViewPublisher)
             val categoryTextView = findViewById<TextView>(R.id.textViewCategory)
 
-            titleTextView.text = product.title  ?: getString(R.string.product_details_unknow)
-            descriptionTextView.text = product.description  ?: getString(R.string.product_details_unknow)
-            brandTextView.text = String.format(getString(R.string.product_details_brand), (product.brand ?: getString(R.string.product_details_unknow)))
-            isbnTextView.text = String.format(getString(R.string.product_details_isbn), (product.isbn ?: getString(R.string.product_details_unknow)))
-            publisherTextView.text = String.format(getString(R.string.product_details_editor), (product.publisher ?: getString(R.string.product_details_unknow)))
-            categoryTextView.text = String.format(getString(R.string.product_details_category), (product.category ?: getString(R.string.product_details_unknow)))
+            titleTextView.text = product.title  ?: getString(R.string.product_details_unknown)
+            descriptionTextView.text = product.description  ?: getString(R.string.product_details_unknown)
+            brandTextView.text = String.format(getString(R.string.product_details_brand), (product.brand ?: getString(R.string.product_details_unknown)))
+            isbnTextView.text = String.format(getString(R.string.product_details_isbn), (product.isbn ?: getString(R.string.product_details_unknown)))
+            publisherTextView.text = String.format(getString(R.string.product_details_editor), (product.publisher ?: getString(R.string.product_details_unknown)))
+            categoryTextView.text = String.format(getString(R.string.product_details_category), (product.category ?: getString(R.string.product_details_unknown)))
 
             if (!product.images.isNullOrEmpty()) {
                 val imageView = findViewById<ImageView>(R.id.imageViewProduct)

@@ -18,7 +18,7 @@ import fr.isep.mediascanner.activity.SetupRoomActivity
 import fr.isep.mediascanner.activity.MainActivity
 import fr.isep.mediascanner.adapter.media.ProductItemAdapter
 import fr.isep.mediascanner.adapter.media.RoomHeaderAdapter
-import fr.isep.mediascanner.database.AppDatabaseSingleton
+import fr.isep.mediascanner.database.local.AppDatabaseSingleton
 import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.model.local.Room
 import kotlinx.coroutines.Dispatchers

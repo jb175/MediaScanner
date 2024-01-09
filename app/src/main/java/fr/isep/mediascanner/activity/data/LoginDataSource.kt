@@ -1,15 +1,14 @@
 package fr.isep.mediascanner.activity.data
 
 import android.util.Log
-import fr.isep.mediascanner.activity.data.model.LoggedInUser
-import fr.isep.mediascanner.database.remote.FirebaseSingleton
-import java.io.IOException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth
-import kotlinx.coroutines.tasks.await
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import fr.isep.mediascanner.activity.data.model.LoggedInUser
+import fr.isep.mediascanner.database.remote.FirebaseSingleton
+import kotlinx.coroutines.tasks.await
+import java.io.IOException
 
 class LoginDataSource {
 

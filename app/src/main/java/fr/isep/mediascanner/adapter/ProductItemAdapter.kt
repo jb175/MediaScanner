@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import fr.isep.mediascanner.R
@@ -16,7 +15,6 @@ abstract class ProductItemAdapter(private val products: List<Product>) : Recycle
     
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val productNameTextView: TextView = itemView.findViewById(R.id.productNameTextView)
-        val productIconImageView: ImageView = itemView.findViewById(R.id.productIconImageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -31,11 +29,11 @@ abstract class ProductItemAdapter(private val products: List<Product>) : Recycle
 
         if (product.category != null) {
             when {
-                product.category.contains("Books") -> holder.productIconImageView.setImageResource(R.drawable.baseline_menu_book_24)
-                product.category.contains("Music & Sound") -> holder.productIconImageView.setImageResource(R.drawable.baseline_music_note_24)
+                product.category.contains("Books") -> holder.productNameTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_menu_book_24, 0, 0, 0)
+                product.category.contains("Music & Sound") -> holder.productNameTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_music_note_24, 0, 0, 0)
             }
         } else {
-            holder.productIconImageView.setImageResource(R.drawable.baseline_error_24)
+            holder.productNameTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_error_24, 0, 0, 0)
         }
     }
 

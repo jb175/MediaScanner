@@ -3,7 +3,7 @@ package fr.isep.mediascanner.dao.remote
 import android.content.Context
 import android.util.Log
 import com.google.firebase.auth.FirebaseUser
-import fr.isep.mediascanner.database.AppDatabaseSingleton
+import fr.isep.mediascanner.database.local.AppDatabaseSingleton
 import fr.isep.mediascanner.database.remote.FirebaseSingleton
 import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.model.local.Room

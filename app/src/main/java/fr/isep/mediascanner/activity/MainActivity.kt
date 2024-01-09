@@ -20,8 +20,8 @@ import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.RequestCodes
-import fr.isep.mediascanner.database.AppDatabase
-import fr.isep.mediascanner.database.AppDatabaseSingleton
+import fr.isep.mediascanner.database.local.AppDatabase
+import fr.isep.mediascanner.database.local.AppDatabaseSingleton
 import fr.isep.mediascanner.fragment.AccountFragment
 import fr.isep.mediascanner.fragment.MediaFragment
 import fr.isep.mediascanner.fragment.ScanFragment
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
     private val setupProductDetailsReadOnlyRefreshForActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            //TODO
+            refreshAccountFragment()
         }
     }
 
@@ -172,5 +172,5 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getSetupProductDetailsRefreshForActivityResult() = setupProductDetailsRefreshForActivityResult
-    fun getsetupProductDetailsReadOnlyRefreshForActivityResult() = setupProductDetailsReadOnlyRefreshForActivityResult
+    fun getSetupProductDetailsReadOnlyRefreshForActivityResult() = setupProductDetailsReadOnlyRefreshForActivityResult
 }

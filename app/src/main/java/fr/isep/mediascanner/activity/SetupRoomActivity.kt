@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat.getParcelableExtra
 import androidx.lifecycle.lifecycleScope
 import fr.isep.mediascanner.R
-import fr.isep.mediascanner.database.AppDatabase
-import fr.isep.mediascanner.database.AppDatabaseSingleton
+import fr.isep.mediascanner.database.local.AppDatabase
+import fr.isep.mediascanner.database.local.AppDatabaseSingleton
 import fr.isep.mediascanner.model.local.Room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
