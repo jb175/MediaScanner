@@ -1,5 +1,6 @@
 package fr.isep.mediascanner.activity.ui.login
 
+import android.app.Activity
 import android.app.DownloadManager
 import android.graphics.Color
 import android.net.Uri
@@ -66,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
             }
-            setResult(RESULT_OK)
+            setResult(Activity.RESULT_OK)
 
             //Complete and destroy login activity once successful
             finish()

@@ -28,8 +28,8 @@ import kotlinx.coroutines.withContext
 class MediaFragment : Fragment() {
 
     private val setupRoomResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK && context is MainActivity) {
-            (context as MainActivity).refreshSavedMediaFragment()
+        if ((result.resultCode == Activity.RESULT_OK || result.resultCode == Activity.RESULT_CANCELED ) && context is MainActivity) {
+            (context as MainActivity).switchFragment(this@MediaFragment)
         }
     }
 

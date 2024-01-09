@@ -26,6 +26,7 @@ import fr.isep.mediascanner.fragment.AccountFragment
 import fr.isep.mediascanner.fragment.MediaFragment
 import fr.isep.mediascanner.fragment.ScanFragment
 import android.net.Network
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import fr.isep.mediascanner.dao.remote.FirebaseDao
 
@@ -46,6 +47,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
     private val scanOptions = ScanOptions()
         .setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES)
         .setPrompt("Scan a barcode")
@@ -55,13 +58,20 @@ class MainActivity : AppCompatActivity() {
 
     private val setupProductDetailsRefreshForActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            refreshSavedMediaFragment()
+            switchFragment(MediaFragment())
         }
     }
 
     private val setupProductDetailsReadOnlyRefreshForActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            refreshAccountFragment()
+            switchFragment(AccountFragment())
+        }
+    }
+
+    private val setupLoginResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        Log.println(Log.INFO, "MediaScannerAccount", "result $result")
+        if (result.resultCode == Activity.RESULT_OK) {
+            switchFragment(AccountFragment())
         }
     }
 
@@ -132,19 +142,6 @@ class MainActivity : AppCompatActivity() {
         connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 
-    fun refreshSavedMediaFragment() {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, MediaFragment())
-        transaction.commit()
-    }
-
-    fun refreshAccountFragment() {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, AccountFragment())
-        transaction.commit()
-    }
-
-
     //scan
     fun startScan() {
         if (checkCameraPermission()) {
@@ -173,4 +170,27 @@ class MainActivity : AppCompatActivity() {
 
     fun getSetupProductDetailsRefreshForActivityResult() = setupProductDetailsRefreshForActivityResult
     fun getSetupProductDetailsReadOnlyRefreshForActivityResult() = setupProductDetailsReadOnlyRefreshForActivityResult
+
+    fun getSetupLoginResultLauncher() = setupLoginResultLauncher
+
+    private val fragmentMenuMap = mapOf(
+        ScanFragment::class to R.id.nav_scan,
+        MediaFragment::class to R.id.nav_saved_media,
+        AccountFragment::class to R.id.nav_account
+    )
+
+    fun switchFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.commit()
+    
+        val menuItemId = fragmentMenuMap[fragment::class]
+        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        if (menuItemId != null) {
+
+            bottomNavigation.selectedItemId = menuItemId
+        } else {
+            Log.e("MainActivity", "No menu item ID found for fragment ${fragment::class}")
+        }
+    }
 }

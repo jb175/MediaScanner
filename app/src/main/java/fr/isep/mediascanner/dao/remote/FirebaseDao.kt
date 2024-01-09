@@ -136,7 +136,15 @@ class FirebaseDao(private val context: Context) {
                                                     // Copy other properties from the original Offer
                                                     title = offer.title,
                                                     price = offer.price,
-                                                    // Add other properties as needed...
+                                                    merchant = offer.merchant,
+                                                    domain = offer.domain,
+                                                    currency = offer.currency,
+                                                    list_price = offer.list_price,
+                                                    shipping = offer.shipping,
+                                                    condition = offer.condition,
+                                                    availability = offer.availability,
+                                                    link = offer.link,
+                                                    updated_t = offer.updated_t
                                                 )
                                             }
                                             if (newOffer != null)

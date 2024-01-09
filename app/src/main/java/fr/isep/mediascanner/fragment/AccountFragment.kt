@@ -47,8 +47,8 @@ class AccountFragment : Fragment() {
     private lateinit var firebaseDatabase: FirebaseDatabase
 
     private val setupRequestAccessLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK && context is MainActivity) {
-            (context as MainActivity).refreshAccountFragment()
+        if ((result.resultCode == Activity.RESULT_OK || result.resultCode == Activity.RESULT_CANCELED ) && context is MainActivity) {
+            (context as MainActivity).switchFragment(this@AccountFragment)
         }
     }
 
@@ -66,15 +66,10 @@ class AccountFragment : Fragment() {
 
             if (auth.currentUser == null) {
                 val intent = Intent(context, LoginActivity::class.java)
-
-                this.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                    if (result.resultCode == Activity.RESULT_OK) {
-                        currentUser = auth.currentUser!!
-                        Log.println(Log.INFO, "MediaScannerAccount", "User logged in ${auth.currentUser}")
-                        firebaseDao.synchronizeDataWithFirebase()
-                    }
-                }.launch(intent)
+                (activity as MainActivity).getSetupLoginResultLauncher().launch(intent)
+                (activity as MainActivity).switchFragment(ScanFragment())
             } else {
+                Log.println(Log.INFO, "MediaScannerAccount", "User logged in ${auth.currentUser}")
                 currentUser = auth.currentUser!!
                 firebaseDao.synchronizeDataWithFirebase()
             }
