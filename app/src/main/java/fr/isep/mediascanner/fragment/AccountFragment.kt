@@ -29,6 +29,7 @@ import fr.isep.mediascanner.database.remote.FirebaseSingleton
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
@@ -183,7 +184,7 @@ class AccountFragment : Fragment() {
         })
     }
 
-    fun sendAccessRequest(receiverUid: String) {
+    private fun sendAccessRequest(receiverUid: String) {
         val senderUid = auth.currentUser?.uid
         if (senderUid != null) {
             val accessRequest = mapOf(
@@ -202,7 +203,7 @@ class AccountFragment : Fragment() {
         if (userUid != null) {
             Log.i("Firebase", "Getting access requests for user $userUid")
             firebaseDatabase.getReference("accessRequests").orderByChild("receiverUid").equalTo(userUid)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
+                .addListenerForSingleValueEvent(@ExperimentalBadgeUtils object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val requests = mutableListOf<Map<String, Any>>()
                         for (requestSnapshot in snapshot.children) {
