@@ -49,4 +49,6 @@
     <string name="mainMenu_search_title">Recherche</string>
     <string name="mainMenu_search_inputHint">Rechercher un titre ou un ISBN</string>
     <string name="mainMenu_account_inputHint">Adresse mail</string>
+    <string name="mainActivity_search_textHeader">de</string>
+    <string name="mainActivity_search_headerNameForUser">votre librairie</string>
 </resources>

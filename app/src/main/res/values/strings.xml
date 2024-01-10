@@ -48,4 +48,6 @@
     <string name="mainMenu_search_title">Search</string>
     <string name="mainMenu_search_inputHint">Search a title or an ISBN</string>
     <string name="mainMenu_account_inputHint">Email</string>
+    <string name="mainActivity_search_textHeader">from</string>
+    <string name="mainActivity_search_headerNameForUser">your library</string>
 </resources>

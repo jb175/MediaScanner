@@ -21,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.activity.MainActivity
+import fr.isep.mediascanner.adapter.search.OtherSearchProductItemAdapter
+import fr.isep.mediascanner.adapter.search.OtherSearchRoomHeaderAdapter
 import fr.isep.mediascanner.adapter.search.SearchProductItemAdapter
 import fr.isep.mediascanner.adapter.search.SearchRoomHeaderAdapter
 import fr.isep.mediascanner.dao.remote.FirebaseDao
@@ -60,19 +62,23 @@ class SearchFragment : Fragment() {
                     adapters.clear()
                     val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                     imm?.hideSoftInputFromWindow(view.windowToken, 0)
+                    searchView.clearFocus()
+                    //search locally
+                    searchInRoomDatabase(query) { products, room ->
+                        if (products.isNotEmpty()) {
+                            adapters.add(SearchRoomHeaderAdapter(room, getString(R.string.mainActivity_search_headerNameForUser)))
+                            adapters.add(SearchProductItemAdapter(products))
+                            recyclerView?.adapter = ConcatAdapter(*adapters.toTypedArray())
+                        }
+                    }
+                    //search from other if connected
                     if (auth.currentUser != null) {
                         searchInFirebase(query) { products, room, uid ->
                             if (products.isNotEmpty()) {
-                                adapters.add(SearchRoomHeaderAdapter(room, uid))
-                                adapters.add(SearchProductItemAdapter(products))
+                                adapters.add(OtherSearchRoomHeaderAdapter(room, uid))
+                                adapters.add(OtherSearchProductItemAdapter(products))
                                 recyclerView?.adapter = ConcatAdapter(*adapters.toTypedArray())
                             }
-                        }
-                    } else {
-                        searchInRoomDatabase(query) { products, room ->
-                            adapters.add(SearchRoomHeaderAdapter(room, "you"))
-                            adapters.add(SearchProductItemAdapter(products))
-                            recyclerView?.adapter = ConcatAdapter(*adapters.toTypedArray())
                         }
                     }
                     return true
@@ -95,51 +101,53 @@ class SearchFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (emailToUidSnapshot in snapshot.children) {
                     val uid = emailToUidSnapshot.value as? String ?: continue
-                    try {
-                        val roomsReference = firebaseDatabase.getReference("users/$uid/rooms")
-                        roomsReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                for (roomSnapshot in snapshot.children) {
-                                    val room = roomSnapshot.getValue(Room::class.java)
-                                    if (room?.name != null) {
-                                        val productsReference = firebaseDatabase.getReference("users/$uid/rooms/${room.id}/products")
-                                        productsReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                                            override fun onDataChange(snapshot: DataSnapshot) {
-                                                val products = mutableListOf<Product>()
-                                                for (productSnapshot in snapshot.children) {
-                                                    val product = productSnapshot.getValue(Product::class.java)
-                                                    if (product != null) {
-                                                        if (product.title != null && product.title.contains(query, ignoreCase = true)) {
-                                                            products.add(product)
-                                                            Log.i("SearchResult", "product found by TITLE: ${product.title}")
-                                                        }
-                                                        if (product.isbn == query) {
-                                                            products.add(product)
-                                                            Log.i("SearchResult", "product found by ISBN: ${product.isbn}")
+                    if (uid != auth.uid) {
+                        try {
+                            val roomsReference = firebaseDatabase.getReference("users/$uid/rooms")
+                            roomsReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    for (roomSnapshot in snapshot.children) {
+                                        val room = roomSnapshot.getValue(Room::class.java)
+                                        if (room?.name != null) {
+                                            val productsReference = firebaseDatabase.getReference("users/$uid/rooms/${room.id}/products")
+                                            productsReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    val products = mutableListOf<Product>()
+                                                    for (productSnapshot in snapshot.children) {
+                                                        val product = productSnapshot.getValue(Product::class.java)
+                                                        if (product != null) {
+                                                            if (product.title != null && product.title.contains(query, ignoreCase = true)) {
+                                                                products.add(product)
+                                                                Log.i("SearchResult", "product found by TITLE: ${product.title}")
+                                                            }
+                                                            if (product.isbn == query) {
+                                                                products.add(product)
+                                                                Log.i("SearchResult", "product found by ISBN: ${product.isbn}")
+                                                            }
                                                         }
                                                     }
+                                                    if (emailToUidSnapshot.key != null) {
+                                                        callback(products, room, emailToUidSnapshot.key!!.replace(",", "."))
+                                                    } else {
+                                                        callback(products, room, uid)
+                                                    }
                                                 }
-                                                if (emailToUidSnapshot.key != null) {
-                                                    callback(products, room, emailToUidSnapshot.key!!.replace(",", "."))
-                                                } else {
-                                                    callback(products, room, uid)
-                                                }
-                                            }
 
-                                            override fun onCancelled(error: DatabaseError) {
-                                                Log.w("Firebase", "Failed to read products.", error.toException())
-                                            }
-                                        })
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    Log.w("Firebase", "Failed to read products.", error.toException())
+                                                }
+                                            })
+                                        }
                                     }
                                 }
-                            }
 
-                            override fun onCancelled(error: DatabaseError) {
-                                Log.w("Firebase", "Failed to read rooms for user $uid", error.toException())
-                            }
-                        })
-                    } catch (e: DatabaseException) {
-                        Log.w("Firebase", "Failed to read data for user $uid.", e)
+                                override fun onCancelled(error: DatabaseError) {
+                                    Log.w("Firebase", "Failed to read rooms for user $uid", error.toException())
+                                }
+                            })
+                        } catch (e: DatabaseException) {
+                            Log.w("Firebase", "Failed to read data for user $uid.", e)
+                        }
                     }
                 }
             }
