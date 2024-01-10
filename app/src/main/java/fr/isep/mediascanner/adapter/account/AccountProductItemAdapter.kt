@@ -7,7 +7,7 @@ import fr.isep.mediascanner.activity.MainActivity
 import fr.isep.mediascanner.activity.productDetails.OtherAccountProductDetailsActivity
 import kotlinx.coroutines.launch
 
-class ProductItemAdapter(private val products: List<Product>,  private val scope: LifecycleCoroutineScope) : fr.isep.mediascanner.adapter.ProductItemAdapter(products) {
+class AccountProductItemAdapter(private val products: List<Product>, private val scope: LifecycleCoroutineScope) : fr.isep.mediascanner.adapter.ProductItemAdapter(products) {
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)

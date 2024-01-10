@@ -36,8 +36,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import fr.isep.mediascanner.activity.RequestsActivity
-import fr.isep.mediascanner.adapter.account.ProductItemAdapter
-import fr.isep.mediascanner.adapter.account.RoomHeaderAdapter
+import fr.isep.mediascanner.adapter.account.AccountProductItemAdapter
+import fr.isep.mediascanner.adapter.account.AccountRoomHeaderAdapter
 import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.model.local.Room
 
@@ -149,7 +149,7 @@ class AccountFragment : Fragment() {
                     val room = roomSnapshot.getValue(Room::class.java)
                     if (room != null) {
                         Log.i("Firebase", "Room fetched: $room")
-                        adapters.add(RoomHeaderAdapter(room))
+                        adapters.add(AccountRoomHeaderAdapter(room))
 
                         val productsReference = firebaseDatabase.getReference("users/$uid/rooms/${room.id}/products")
                         productsReference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -162,7 +162,7 @@ class AccountFragment : Fragment() {
                                         products.add(product)
                                     }
                                 }
-                                adapters.add(ProductItemAdapter(products, lifecycleScope))
+                                adapters.add(AccountProductItemAdapter(products, lifecycleScope))
 
                                 loadedRoomCount++
                                 if (loadedRoomCount >= roomCount) {

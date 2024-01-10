@@ -21,7 +21,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.activity.MainActivity
-import fr.isep.mediascanner.adapter.search.ProductItemAdapter
+import fr.isep.mediascanner.adapter.search.SearchProductItemAdapter
+import fr.isep.mediascanner.adapter.search.SearchRoomHeaderAdapter
 import fr.isep.mediascanner.dao.remote.FirebaseDao
 import fr.isep.mediascanner.database.local.AppDatabaseSingleton
 import fr.isep.mediascanner.database.remote.FirebaseSingleton
@@ -56,16 +57,21 @@ class SearchFragment : Fragment() {
             val adapters = mutableListOf<RecyclerView.Adapter<*>>()
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
+                    adapters.clear()
                     val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                     imm?.hideSoftInputFromWindow(view.windowToken, 0)
                     if (auth.currentUser != null) {
-                        searchInFirebase(query) { products, uid, roomName ->
-                            adapters.add(ProductItemAdapter(products))
-                            recyclerView?.adapter = ConcatAdapter(*adapters.toTypedArray())
+                        searchInFirebase(query) { products, room, uid ->
+                            if (products.isNotEmpty()) {
+                                adapters.add(SearchRoomHeaderAdapter(room, uid))
+                                adapters.add(SearchProductItemAdapter(products))
+                                recyclerView?.adapter = ConcatAdapter(*adapters.toTypedArray())
+                            }
                         }
                     } else {
-                        searchInRoomDatabase(query) { products, roomName ->
-                            adapters.add(ProductItemAdapter(products))
+                        searchInRoomDatabase(query) { products, room ->
+                            adapters.add(SearchRoomHeaderAdapter(room, "you"))
+                            adapters.add(SearchProductItemAdapter(products))
                             recyclerView?.adapter = ConcatAdapter(*adapters.toTypedArray())
                         }
                     }
@@ -74,6 +80,7 @@ class SearchFragment : Fragment() {
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     recyclerView.adapter = null
+                    adapters.clear()
                     return false
                 }
             })
@@ -82,7 +89,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    fun searchInFirebase(query: String, callback: (List<Product>, String, String) -> Unit) {
+    fun searchInFirebase(query: String, callback: (List<Product>, Room, String) -> Unit) {
         val emailsToUidsReference = firebaseDatabase.getReference("emailsToUids")
         emailsToUidsReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -112,7 +119,11 @@ class SearchFragment : Fragment() {
                                                         }
                                                     }
                                                 }
-                                                callback(products, uid, room.name!!)
+                                                if (emailToUidSnapshot.key != null) {
+                                                    callback(products, room, emailToUidSnapshot.key!!.replace(",", "."))
+                                                } else {
+                                                    callback(products, room, uid)
+                                                }
                                             }
 
                                             override fun onCancelled(error: DatabaseError) {
@@ -139,28 +150,26 @@ class SearchFragment : Fragment() {
         })
     }
 
-    private fun searchInRoomDatabase(query: String, callback: (List<Product>, String) -> Unit) {
+    private fun searchInRoomDatabase(query: String, callback: (List<Product>, Room) -> Unit) {
         lifecycleScope.launch {
             val db = AppDatabaseSingleton.getDatabase((context as MainActivity).applicationContext)
             val rooms: List<Room> = withContext(Dispatchers.IO) { db.roomDao().getAll() }
 
             for (room in rooms) {
-                if (room.name != null) {
-                    val products: List<Product> = withContext(Dispatchers.IO) { db.productDao().getProductsForRoom(room.id) }
-                    val productsReturned = mutableListOf<Product>()
-                    for (product in products) {
-                        if (product.title != null && product.title.contains(query, ignoreCase = true)) {
-                            productsReturned.add(product)
-                            Log.i("SearchResult", "product found locally by TITLE: ${product.title}")
-                        }
-                        if (product.isbn == query) {
-                            productsReturned.add(product)
-                            Log.i("SearchResult", "product found locally by ISBN: ${product.isbn}")
-                        }
+                val products: List<Product> = withContext(Dispatchers.IO) { db.productDao().getProductsForRoom(room.id) }
+                val productsReturned = mutableListOf<Product>()
+                for (product in products) {
+                    if (product.title != null && product.title.contains(query, ignoreCase = true)) {
+                        productsReturned.add(product)
+                        Log.i("SearchResult", "product found locally by TITLE: ${product.title}")
                     }
-                    callback(productsReturned, room.name!!)
-                    Log.println(Log.INFO, "RoomMediaScanner", String.format("room #%d %s contain %s", room.id, room.name, products.toString()))
+                    if (product.isbn == query) {
+                        productsReturned.add(product)
+                        Log.i("SearchResult", "product found locally by ISBN: ${product.isbn}")
+                    }
                 }
+                callback(productsReturned, room)
+                Log.println(Log.INFO, "RoomMediaScanner", String.format("room #%d %s contain %s", room.id, room.name, products.toString()))
             }
         }
     }

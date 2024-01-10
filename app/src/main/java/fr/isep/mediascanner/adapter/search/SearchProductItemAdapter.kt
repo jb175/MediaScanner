@@ -5,7 +5,7 @@ import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.activity.MainActivity
 import fr.isep.mediascanner.activity.productDetails.OtherAccountProductDetailsActivity
 
-class ProductItemAdapter(private val products: List<Product>) : fr.isep.mediascanner.adapter.ProductItemAdapter(products) {
+class SearchProductItemAdapter(private val products: List<Product>) : fr.isep.mediascanner.adapter.ProductItemAdapter(products) {
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)

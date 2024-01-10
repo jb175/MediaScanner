@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.activity.SetupRoomActivity
 import fr.isep.mediascanner.activity.MainActivity
-import fr.isep.mediascanner.adapter.media.ProductItemAdapter
-import fr.isep.mediascanner.adapter.media.RoomHeaderAdapter
+import fr.isep.mediascanner.adapter.media.MediaProductItemAdapter
+import fr.isep.mediascanner.adapter.media.MediaRoomHeaderAdapter
 import fr.isep.mediascanner.database.local.AppDatabaseSingleton
 import fr.isep.mediascanner.model.local.Product
 import fr.isep.mediascanner.model.local.Room
@@ -52,8 +52,8 @@ class MediaFragment : Fragment() {
                 val adapters = mutableListOf<RecyclerView.Adapter<*>>()
                 for (room in rooms) {
                     val products: List<Product> = withContext(Dispatchers.IO) { db.productDao().getProductsForRoom(room.id) }
-                    adapters.add(RoomHeaderAdapter(room, lifecycleScope))
-                    adapters.add(ProductItemAdapter(products, lifecycleScope))
+                    adapters.add(MediaRoomHeaderAdapter(room, lifecycleScope))
+                    adapters.add(MediaProductItemAdapter(products, lifecycleScope))
 
                     Log.println(Log.INFO, "RoomMediaScanner", String.format("room #%d %s contain %s", room.id, room.name, products.toString()))
                 }

@@ -35,7 +35,7 @@ class RequestsAdapter(private val requests: MutableList<Request>) : RecyclerView
         .addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    val email = snapshot.children.first().key
+                    val email = snapshot.children.first().key?.replace(",", ".")
                     holder.email.text = email
                 }
             }
