@@ -37,7 +37,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:queryHint="Search for a user by email" />
+                android:queryHint="Search for a user by email"
+                android:hint="@string/mainMenu_account_inputHint"/>
 
         </com.google.android.material.card.MaterialCardView>
 

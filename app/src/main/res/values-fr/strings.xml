@@ -45,4 +45,8 @@
     <string name="requestActivity_deny">Refuser</string>
     <string name="ActivityRequest_title">Demandes d\'accés</string>
     <string name="mainMenu_account_accessRefused">Vous n\'avez pas accés aux données de cet utilisateur</string>
+    <string name="mainMenu_search">Recherche</string>
+    <string name="mainMenu_search_title">Recherche</string>
+    <string name="mainMenu_search_inputHint">Rechercher un titre ou un ISBN</string>
+    <string name="mainMenu_account_inputHint">Adresse mail</string>
 </resources>

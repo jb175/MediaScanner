@@ -27,8 +27,12 @@ import fr.isep.mediascanner.fragment.MediaFragment
 import fr.isep.mediascanner.fragment.ScanFragment
 import android.net.Network
 import androidx.fragment.app.Fragment
+import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.auth.FirebaseAuth
 import fr.isep.mediascanner.dao.remote.FirebaseDao
+import fr.isep.mediascanner.fragment.SearchFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,8 +69,13 @@ class MainActivity : AppCompatActivity() {
 
     private val setupProductDetailsOtherAccountResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            firebaseDao.synchronizeDataWithFirebase()
             switchFragment(AccountFragment())
+        }
+    }
+
+    private val setupProductDetailsSearchResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            //do nothing
         }
     }
 
@@ -86,6 +95,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        
+        FirebaseApp.initializeApp(this)
+        FirebaseAppCheck.getInstance().installAppCheckProviderFactory(DebugAppCheckProviderFactory.getInstance())
 
         db = AppDatabaseSingleton.getDatabase(applicationContext)
         firebaseDao = FirebaseDao(applicationContext)
@@ -106,6 +118,7 @@ class MainActivity : AppCompatActivity() {
                     when (item.itemId) {
                         R.id.nav_scan -> ScanFragment()
                         R.id.nav_saved_media -> MediaFragment()
+                        R.id.nav_search -> SearchFragment()
                         R.id.nav_account -> AccountFragment()
                         else -> null
                     }
@@ -172,11 +185,14 @@ class MainActivity : AppCompatActivity() {
     fun getSetupProductDetailsResultLauncher() = setupProductDetailsResultLauncher
     fun getSetupProductDetailsOtherAccountResultLauncher() = setupProductDetailsOtherAccountResultLauncher
 
+    fun getSetupProductDetailsSearchResultLauncher() = setupProductDetailsSearchResultLauncher
+
     fun getSetupLoginResultLauncher() = setupLoginResultLauncher
 
     private val fragmentMenuMap = mapOf(
         ScanFragment::class to R.id.nav_scan,
         MediaFragment::class to R.id.nav_saved_media,
+        SearchFragment::class to R.id.nav_search,
         AccountFragment::class to R.id.nav_account
     )
 
