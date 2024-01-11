@@ -103,7 +103,6 @@ class AccountFragment : Fragment() {
         } 
     }
 
-    // Add this function to your AccountFragment class
     fun searchUserByEmail(email: String) {
         val emailKey = email.replace(".", ",")
         val reference = FirebaseSingleton.getDatabaseInstance().getReference("emailsToUids").child(emailKey)
@@ -125,7 +124,6 @@ class AccountFragment : Fragment() {
         })
     }
 
-    // Add this function to your AccountFragment class
     fun displayUserRoomsAndProducts(uid: String) {
         Log.i("Firebase", "User found : $uid")
 
@@ -201,8 +199,7 @@ class AccountFragment : Fragment() {
             firebaseDatabase.getReference("accessRequests").push().setValue(accessRequest)
         }
     }
-    
-    // Function to get access requests
+
     private fun getAccessRequests() {
         val userUid = auth.currentUser?.uid
         if (userUid != null) {
@@ -221,17 +218,13 @@ class AccountFragment : Fragment() {
                         }
 
                         val fab: FloatingActionButton? = view?.findViewById(R.id.fab)
-                        // Check if fab is not null
                         if (fab != null) {
                             val badge = BadgeDrawable.create(activity as MainActivity)
                             badge.number = requests.size
                             badge.backgroundColor = Color.RED
-                            // Only display the badge if the number of requests is greater than 0
                             if (requests.size > 0) {
-                                // Display the number of requests on the FloatingActionButton
                                 BadgeUtils.attachBadgeDrawable(badge, fab, null)
                             } else {
-                                // Remove the badge if the number of requests is 0
                                 BadgeUtils.detachBadgeDrawable(badge, fab)
                             }
                         }

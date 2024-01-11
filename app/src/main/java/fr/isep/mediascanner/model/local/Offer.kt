@@ -12,16 +12,16 @@ import androidx.room.PrimaryKey
         childColumns = ["productId"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index("productId")] // Add this line
+    indices = [Index("productId")]
 )
 data class Offer(
     @PrimaryKey val id: Int = 0,
-    val productId: Int = 0, // Foreign key
+    val productId: Int = 0,
     val merchant: String? = null,
     val domain: String? = null,
     val title: String? = null,
     val currency: String? = null,
-    val list_price: String? = null, // Consider changing this to Double if it's a numeric value
+    val list_price: String? = null,
     val price: Double? = null,
     val shipping: String? = null,
     val condition: String? = null,

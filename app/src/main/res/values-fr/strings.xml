@@ -51,4 +51,6 @@
     <string name="mainMenu_account_inputHint">Adresse mail</string>
     <string name="mainActivity_search_textHeader">de</string>
     <string name="mainActivity_search_headerNameForUser">votre librairie</string>
+    <string name="mainMenu_scan_buttonStopScan">Arréter</string>
+    <string name="mainMenu_media_title">Bibliothèque</string>
 </resources>

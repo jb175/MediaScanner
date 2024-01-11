@@ -1,6 +1,5 @@
 package fr.isep.mediascanner.activity
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -12,12 +11,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.journeyapps.barcodescanner.ScanContract
-import com.journeyapps.barcodescanner.ScanIntentResult
-import com.journeyapps.barcodescanner.ScanOptions
 import fr.isep.mediascanner.R
 import fr.isep.mediascanner.RequestCodes
 import fr.isep.mediascanner.database.local.AppDatabase
@@ -39,26 +33,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var db: AppDatabase
     private lateinit var firebaseDao: FirebaseDao
     lateinit var auth: FirebaseAuth
-
-    private val scanContract = registerForActivityResult(ScanContract()) { result: ScanIntentResult? ->
-        if (result==null || result.contents == null) {
-            Log.println(Log.INFO, "ScanResult", "Cancelled scan")
-        } else {
-            Log.println(Log.INFO, "ScanResult", "Scanned: " + result.contents)
-            val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-            if (fragment is ScanFragment) {
-                fragment.requestProductDetails(result.contents)
-            }
-        }
-    }
-
-
-    private val scanOptions = ScanOptions()
-        .setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES)
-        .setPrompt("Scan a barcode")
-        .setCameraId(0)
-        .setBeepEnabled(false)
-        .setBarcodeImageEnabled(false)
 
     private val setupProductDetailsResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -124,6 +98,10 @@ class MainActivity : AppCompatActivity() {
                     }
 
             if (fragment != null) {
+                val actualFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+                if (actualFragment is ScanFragment) {
+                    actualFragment.stopScan()
+                }
                 supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.fragment_container, fragment)
@@ -156,27 +134,13 @@ class MainActivity : AppCompatActivity() {
         connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 
-    //scan
-    fun startScan() {
-        if (checkCameraPermission()) {
-            scanContract.launch(scanOptions)
-        } else {
-            requestCameraPermission()
-        }
-    }
-
-    private fun checkCameraPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun requestCameraPermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), RequestCodes.CAMERA_PERMISSION_REQUEST_CODE)
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == RequestCodes.CAMERA_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                scanContract.launch(scanOptions)
+                val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+                if (fragment is ScanFragment) {
+                    fragment.startScan()
+                }
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -204,7 +168,6 @@ class MainActivity : AppCompatActivity() {
         val menuItemId = fragmentMenuMap[fragment::class]
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         if (menuItemId != null) {
-
             bottomNavigation.selectedItemId = menuItemId
         } else {
             Log.e("MainActivity", "No menu item ID found for fragment ${fragment::class}")

@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
     @PrimaryKey val id: Int,
     var name: String?
 ) : Parcelable {
-    constructor() : this(0, null) // No-argument constructor for Firebase
+    constructor() : this(0, null)
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(),

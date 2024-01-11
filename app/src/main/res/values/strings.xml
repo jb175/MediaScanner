@@ -50,4 +50,6 @@
     <string name="mainMenu_account_inputHint">Email</string>
     <string name="mainActivity_search_textHeader">from</string>
     <string name="mainActivity_search_headerNameForUser">your library</string>
+    <string name="mainMenu_scan_buttonStopScan">Stop</string>
+    <string name="mainMenu_media_title">Library</string>
 </resources>
